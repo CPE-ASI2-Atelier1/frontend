@@ -1,0 +1,46 @@
+.card-container {
+    width: 300px; /* Taille de la carte */
+    height: 400px; /* Proportions idéales pour une carte */
+    background: linear-gradient(135deg, #f9d423, #ff4e50); /* Dégradé de fond */
+    border: 3px solid #333; /* Bordure noire épaisse */
+    border-radius: 15px; /* Coins arrondis */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Ombre pour un effet 3D */
+    overflow: hidden; /* Assure que les débordements sont masqués */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Arial', sans-serif; /* Typographie propre */
+    color: #333; /* Couleur de texte par défaut */
+    text-align: center;
+    padding: 10px;
+}
+
+.card-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Effet brillant pour le nom */
+    margin: 10px 0;
+}
+
+.card-media {
+    width: 90%;
+    height: 60%;
+    background-color: #fff; /* Zone blanche où le média s'affiche */
+    border-radius: 10px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2); /* Ombre intérieure */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Cache les débordements */
+}
+
+.card-media img,
+.card-media video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover; /* Assure un bon rendu des médias */
+    border-radius: 10px;
+}
