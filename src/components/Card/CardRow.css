@@ -1,0 +1,46 @@
+/* Conteneur principal pour une ligne de carte */
+.card-row {
+    background-color: #fff; /* Fond blanc pour la lisibilité */
+    border-bottom: 1px solid #ddd; /* Ligne séparatrice discrète */
+    transition: background-color 0.3s ease; /* Effet d'animation pour hover */
+    font-family: 'Arial', sans-serif; /* Police simple et propre */
+    font-size: 0.9rem; /* Taille de texte légèrement réduite */
+    color: #333; /* Couleur de texte sombre */
+}
+
+/* Alternance des couleurs pour les lignes */
+.card-row:nth-child(even) {
+    background-color: #f9f9f9; /* Couleur de fond alternée */
+}
+
+/* Style pour les cellules */
+.card-row td {
+    padding: 10px; /* Espacement autour du texte */
+    text-align: center; /* Alignement centré */
+    vertical-align: middle; /* Alignement vertical au centre */
+}
+
+/* Interaction au survol */
+.card-row:hover {
+    background-color: #f1f1f1; /* Légère couleur grisée pour survol */
+    cursor: pointer; /* Curseur en forme de main pour l'interactivité */
+}
+
+/* Prix (par exemple, affichage en gras ou couleur distincte) */
+.card-row td:nth-child(2) {
+    font-weight: bold; /* Texte en gras */
+    color: #ff4e50; /* Couleur rouge-orangé pour mettre en valeur */
+}
+
+/* Colonnes de statistiques (attack, defence) */
+.card-row td:nth-child(3),
+.card-row td:nth-child(4) {
+    color: #007bff; /* Bleu vif pour différencier */
+    font-weight: 600; /* Légèrement en gras */
+}
+
+/* Colonne UserId (plus discrète) */
+.card-row td:nth-child(5) {
+    color: #777; /* Couleur grisée pour moins d'importance */
+    font-style: italic; /* Texte en italique pour un aspect différent */
+}

@@ -44,3 +44,33 @@
     object-fit: cover; /* Assure un bon rendu des médias */
     border-radius: 10px;
 }
+
+.card-properties {
+    width: 90%; /* Largeur ajustée pour s'intégrer à la carte */
+    margin: 10px auto; /* Espacement pour centrer la table */
+    background-color: rgba(255, 255, 255, 0.9); /* Fond légèrement translucide */
+    border-radius: 8px; /* Coins arrondis */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Ombre douce */
+    border-collapse: collapse; /* Style propre pour la table */
+    font-size: 1rem; /* Taille de texte standard */
+    color: #333; /* Couleur de texte */
+    overflow: hidden;
+}
+
+.card-properties th {
+    padding: 10px; /* Espacement à l'intérieur des cellules */
+    text-align: center; /* Texte centré */
+    background-color: #f0f0f0; /* Fond des cellules d'en-tête */
+    border: 1px solid #ccc; /* Bordure entre les cellules */
+    font-weight: bold; /* Texte en gras */
+}
+
+.card-properties td {
+    padding: 8px; /* Espacement pour les cellules */
+    text-align: center; /* Texte centré */
+    border: 1px solid #ddd; /* Bordure discrète */
+}
+
+.card-properties tr:nth-child(even) {
+    background-color: #f9f9f9; /* Couleur de fond alternée pour les lignes */
+}
