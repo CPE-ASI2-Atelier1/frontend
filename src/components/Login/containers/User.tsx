@@ -1,15 +1,29 @@
-// import React from 'react';
-// import {UserDisplaySmall} from '../components/UserDisplaySmall';
+import { UserShortDisplay } from "../components/UserShortDisplay";
+import { UserLargeDisplay } from "../components/UserLargeDisplay";
 
-//  export const User=(props)=> {
-//         return ( 
-//                 <UserDisplaySmall 
-//                     id={props.id}
-//                     surname={props.surname}
-//                     lastname={props.lastname}
-//                     login={props.login}
-//                     pwd={props.pwd}
-//                     money={props.money}> 
-//                 </UserDisplaySmall>
-//             );
-//     }
+// Interface utilisateur
+export interface IUser {
+    id: number;
+    username: string;
+    password?: string;
+    money: number;
+}
+
+// Composant utilisateur
+interface UserProps {
+    user: IUser;
+    display: "short" | "large";
+}
+
+export const User = ({ user, display }: UserProps) => {
+    if (display === "short") {
+        return (
+            <UserShortDisplay username={user.username} />
+        );
+    } else if (display === "large") {
+        return (
+            <UserLargeDisplay user={user} />
+        );
+    }
+    return null;
+};
