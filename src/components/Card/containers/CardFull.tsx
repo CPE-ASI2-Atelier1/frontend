@@ -1,34 +1,19 @@
 import {CardName} from "../components/CardName.tsx";
 import {Media} from "../../common/components/Media.tsx";
-import '../Card.css'
+import './Card.css'
 import {CardProperties} from "../components/CardProperties.tsx";
+import {ICard} from "../Card.tsx";
 
 // enum display {
 //     FULL = 'FULL',
 //     SMALL = 'SMALL',
 // }
 
-export interface ICard {
-    name: string;
-    description: string;
-    family: string;
-    affinity: string;
-    imgUrl: string;
-    smallOmgUrl: string;
-    id: number;
-    energy: number;
-    hp: number;
-    defence: number;
-    attack: number;
-    price: number;
-    userId: number;
-}
-
 interface IProps {
     card: ICard;
 }
 
-export const Card=(props:IProps)=> {
+export const CardFull=(props:IProps)=> {
     return (
         <div className="card-container">
             <CardName title={props.card.name}></CardName>

@@ -1,5 +1,5 @@
 // TEST - TO REMOVE
-import {Card, ICard} from "../components/Card/containers/Card";
+import {ICard, Card} from "../components/Card/Card.tsx";
 
 export const CardDisplay =() =>{
     const card:ICard = {
@@ -20,7 +20,7 @@ export const CardDisplay =() =>{
 
     return (
         <>
-            <Card card={card}></Card>
+            <Card card={card} display="full"></Card>
         </>
     )
 }

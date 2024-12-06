@@ -5,6 +5,7 @@ import {Home} from "./pages/Home.tsx";
 import {Inventory} from "./pages/Inventory.tsx";
 import { Login } from "./pages/Login.tsx";
 import { Signup } from "./pages/Signup";
+import {CardCreation} from "./pages/CardCreation.tsx";
 
 
 
@@ -16,12 +17,14 @@ function App() {
                 <NavLink to="/display">Display</NavLink>
                 <NavLink to="/inventory">Inventory</NavLink>
                 <NavLink to="/login">Se connecter</NavLink>
+                <NavLink to="/create">CreateCard</NavLink>
                 <Routes>
                     <Route path="/display" element={<CardDisplay/>} />
                     <Route path="/inventory" element={<Inventory/>} />
                     <Route path="/" element={<Home/>} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
+                    <Route path="/create" element={<CardCreation/>} />
                 </Routes>
             </BrowserRouter>
         </>

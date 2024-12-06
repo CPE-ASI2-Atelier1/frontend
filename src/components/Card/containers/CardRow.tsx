@@ -1,14 +1,22 @@
 import {CardName} from "../components/CardName.tsx";
-import {ICard} from "./Card.tsx";
-import "../CardRow.css"
+import {useDispatch} from "react-redux";
+import {cardSelection} from "../../../slices/cardSlice.ts";
+import {ICard} from "../Card.tsx";
+import "./CardRow.css"
 
 interface IProps {
     card: ICard;
 }
 
 export const CardRow=(props:IProps)=> {
+    const dispatch = useDispatch();
+
+    function handleClick(){
+        dispatch(cardSelection(props.card))
+    }
+
     return (
-        <tr className="card-row">
+        <tr className="card-row" onClick={handleClick}>
             <td>
                 <CardName title={props.card.name}></CardName>
             </td>

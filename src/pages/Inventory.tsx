@@ -1,6 +1,7 @@
-import {ICard} from "../components/Card/containers/Card.tsx";
-import {CardRow} from "../components/Card/containers/CardRow.tsx";
+import {ICard, Card} from "../components/Card/Card.tsx";
 import React from "react";
+import {useSelector} from "react-redux";
+import {RootState} from "../store.ts";
 
 // interface IProps {
 //     cards:ICard[]
@@ -8,13 +9,15 @@ import React from "react";
 
 export const Inventory =() => {
 
+    const cardDisplay = useSelector((state:RootState ) => state.cardReducer.card)
+
     const cards:ICard[] = [ /// TEST
         {
-            name: "Card 1",
-            description: "Good Card",
-            family: "Card-esque",
+            name: "Mewtwo",
+            description: "Good CardFull",
+            family: "Psy",
             affinity: "Power",
-            imgUrl: "none",
+            imgUrl: "https://static.printler.com/cache/8/a/2/f/b/1/8a2fb18dd21981cdf402b34c2788d39bcbb59657.jpg",
             smallOmgUrl: "none",
             id: 1,
             energy: 50,
@@ -25,11 +28,11 @@ export const Inventory =() => {
             userId: 1,
         },
         {
-            name: "Card 2",
-            description: "Bad Card",
-            family: "Card-esque",
-            affinity: "Lyon",
-            imgUrl: "none",
+            name: "Mew",
+            description: "Perfect CardFull",
+            family: "Cat",
+            affinity: "Felines",
+            imgUrl: "https://i.pinimg.com/474x/4d/a9/9f/4da99f66d7f5d439b4639b5a217e5fb1.jpg",
             smallOmgUrl: "none",
             id: 2,
             energy: 500,
@@ -42,7 +45,7 @@ export const Inventory =() => {
     ]
     const cardRows = [] as React.ReactNode[];
     cards.forEach((card:ICard) => {
-        cardRows.push(<CardRow card={card}/>);
+        cardRows.push(<Card card={card} display="row"/>);
     })
     return (
         <>
@@ -50,7 +53,7 @@ export const Inventory =() => {
                 {cardRows}
             </table>
             <div>
-                <p>DEHORS</p>
+                <Card card={cardDisplay} display="full" />
             </div>
         </>
     );
