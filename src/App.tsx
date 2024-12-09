@@ -1,3 +1,8 @@
+/**
+ * @author Arthur Jezequel
+ * @author Evann Nalewajek
+ */
+
 import './App.css';
 import {BrowserRouter, NavLink, Route, Routes} from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -10,8 +15,6 @@ import { Login } from "./pages/Login.tsx";
 import { Signup } from "./pages/Signup";
 import {CardCreation} from "./pages/CardCreation.tsx";
 import { Profil } from "./pages/Profil";
-
-
 
 function App() {
 

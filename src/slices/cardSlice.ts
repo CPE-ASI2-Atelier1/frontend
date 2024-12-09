@@ -1,28 +1,25 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {ICard} from "../components/Card/Card.tsx";
+/**
+ * @author Arthur Jezequel
+ */
 
+import {createSlice} from "@reduxjs/toolkit";
+
+/**
+ * Store slice handling cards
+ */
 export const cardSlice = createSlice({
     name: "card",
     initialState: {
-        card : {
-            name: "Floppa",
-            description: "Floppa McFlopper Floppin' arround.",
-            family: "Felines",
-            affinity: "Lyon",
-            imgUrl: "https://assets.coingecko.com/coins/images/36969/large/floppa.jpg?1722771377",
-            smallOmgUrl: "https://assets.coingecko.com/coins/images/36969/large/floppa.jpg?1722771377",
-            id: 2,
-            energy: 500,
-            hp: 26,
-            defence: 4,
-            attack: 1,
-            price: 69,
-            userId: 2,
-        }
+        cardId : -1
     },
     reducers: {
-        cardSelection: (state, action : {payload: ICard}   ) => {
-            state.card = action.payload || {};
+        /**
+         * When a card is selected, the id is updated so subscribed component can fetch the card
+         * @param state State of the card slice.
+         * @param action Payload containing the new card id
+         */
+        cardSelection: (state, action : {payload: number}   ) => {
+            state.cardId = action.payload || -1;
         }
     }
 })

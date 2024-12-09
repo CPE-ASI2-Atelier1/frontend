@@ -1,18 +1,22 @@
+/**
+ * @author Arthur Jezequel
+ */
+
 import {CardName} from "../components/CardName.tsx";
 import {Media} from "../../common/components/Media.tsx";
 import './Card.css'
 import {CardProperties} from "../components/CardProperties.tsx";
-import {ICard} from "../Card.tsx";
-
-// enum display {
-//     FULL = 'FULL',
-//     SMALL = 'SMALL',
-// }
+import ICard from "../../../types/ICard.ts";
 
 interface IProps {
     card: ICard;
 }
 
+/**
+ * Component for showing a full card component on the page.
+ * @param props props containing the card (ICard interface)
+ * @constructor
+ */
 export const CardFull=(props:IProps)=> {
     return (
         <div className="card-container">

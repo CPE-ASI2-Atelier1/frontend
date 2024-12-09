@@ -1,51 +1,27 @@
-import {ICard, Card} from "../components/Card/Card.tsx";
+/**
+ * @author Arthur Jezequel
+ */
+
+import {Card} from "../components/Card/Card.tsx";
 import React from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../store.ts";
 
-// interface IProps {
-//     cards:ICard[]
-// }
+// TODO : This take the userId as input so it can fetch all cards of the current user (filter FetchAllCards() on userId)
 
+/**
+ * Inventory page that displays all the user's card
+ * @constructor
+ */
 export const Inventory =() => {
 
-    const cardDisplay = useSelector((state:RootState ) => state.cardReducer.card)
+    // const cardDisplay = useSelector((state:RootState ) => state.cardReducer.card)
+    const cardId:number = useSelector((state:RootState ) => state.cardReducer.cardId)
 
-    const cards:ICard[] = [ /// TEST
-        {
-            name: "Mewtwo",
-            description: "Good CardFull",
-            family: "Psy",
-            affinity: "Power",
-            imgUrl: "https://static.printler.com/cache/8/a/2/f/b/1/8a2fb18dd21981cdf402b34c2788d39bcbb59657.jpg",
-            smallOmgUrl: "none",
-            id: 1,
-            energy: 50,
-            hp: 26,
-            defence: 4,
-            attack: 100,
-            price: 5050,
-            userId: 1,
-        },
-        {
-            name: "Mew",
-            description: "Perfect CardFull",
-            family: "Cat",
-            affinity: "Felines",
-            imgUrl: "https://i.pinimg.com/474x/4d/a9/9f/4da99f66d7f5d439b4639b5a217e5fb1.jpg",
-            smallOmgUrl: "none",
-            id: 2,
-            energy: 500,
-            hp: 26,
-            defence: 4,
-            attack: 1,
-            price: 50,
-            userId: 2,
-        }
-    ]
+    const cardIds: number[] = [1, 2, 3, 4, 5 ] // Need to be coming from userService
     const cardRows = [] as React.ReactNode[];
-    cards.forEach((card:ICard) => {
-        cardRows.push(<Card card={card} display="row"/>);
+    cardIds.forEach((id:number) => {
+        cardRows.push(<Card cardId={id} display="row"/>);
     })
     return (
         <>
@@ -53,7 +29,7 @@ export const Inventory =() => {
                 {cardRows}
             </table>
             <div>
-                <Card card={cardDisplay} display="full" />
+                <Card cardId={cardId} display="full" />
             </div>
         </>
     );
