@@ -1,3 +1,7 @@
+/**
+ * @author Evann Nalewajek
+ */
+
 interface IProps {
     username: string;
 }
