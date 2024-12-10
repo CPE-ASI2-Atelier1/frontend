@@ -1,0 +1,23 @@
+.card-form {
+    display: flex;
+    flex-direction: column; /* Aligne verticalement */
+    gap: 10px; /* Espacement entre les champs */
+    max-width: 400px; /* Largeur maximale pour centrer le formulaire */
+    margin: 0 auto; /* Centre horizontalement */
+}
+
+.card-form label {
+    font-weight: bold; /* Pour une meilleure lisibilité */
+}
+
+.card-form input[type="text"] {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.card-form input[type="button"],
+.card-form input[type="submit"] {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
