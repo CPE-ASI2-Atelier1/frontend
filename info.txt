@@ -1,0 +1,2 @@
+npm install --save-dev @types/react@latest @types/react-dom@latest
+npm install react-router-dom
