@@ -1,4 +1,5 @@
 import IUser from "../types/IUser";
+import { formUser } from "../pages/Signup"
 
 const base_url: string= `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`
 
@@ -49,7 +50,7 @@ export const fetchUserById = async (userId: number): Promise<IUser> => {
     return await response.json();
 };
 
-export const register = async (user: IUser): Promise<IUser> => {
+export const register = async (user: formUser): Promise<IUser> => {
     const url: string = base_url+"/user";
 
     const response = await fetch(url, {

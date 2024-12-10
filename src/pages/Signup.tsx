@@ -11,6 +11,13 @@ import { update_user_action, submit_user_action } from "../slices/userSlice";
 import { register } from "../api/userService";
 import IUser from "../types/IUser";
 
+export interface formUser {
+    login: string;
+    pwd?: string;
+    lastName: string;
+    surName: string;
+    email: string;
+}
 export const Signup = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -36,15 +43,12 @@ export const Signup = () => {
             return;
         }
 
-        const user: IUser = {
-            id: 0,
+        const user: formUser = {
             login,
             pwd: password,
-            account: 0,
             surName,
             lastName,
             email,
-            cardList: [],
         };
 
         try {
