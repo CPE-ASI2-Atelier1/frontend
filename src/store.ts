@@ -1,3 +1,8 @@
+/**
+ * @author Arthur Jezequel
+ * @author Evann Nalewajek
+ */
+
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './slices/userSlice';
 import authReducer from './slices/authSlice';

@@ -1,15 +1,11 @@
+/**
+ * @author Evann Nalewajek
+ */
+
 import { UserShortDisplay } from "../components/UserShortDisplay";
 import { UserLargeDisplay } from "../components/UserLargeDisplay";
+import IUser from "../../../types/IUser";
 
-// Interface utilisateur
-export interface IUser {
-    id: number;
-    username: string;
-    password?: string;
-    money: number;
-}
-
-// Composant utilisateur
 interface UserProps {
     user: IUser;
     display: "short" | "large";
@@ -18,7 +14,7 @@ interface UserProps {
 export const User = ({ user, display }: UserProps) => {
     if (display === "short") {
         return (
-            <UserShortDisplay username={user.username} />
+            <UserShortDisplay username={user.login} />
         );
     } else if (display === "large") {
         return (

@@ -1,24 +1,18 @@
+/**
+ * @author Evann Nalewajek
+ */
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IUser } from '../components/Login/containers/User';
+import IUser from "../types/IUser";
 
 interface UserState {
-    user: IUser;
-    submitted_user: IUser;
+    user: IUser | null;
+    submitted_user: IUser | null;
 }
 
 const initialState: UserState = {
-    user: {
-      id: -1,
-      username: "string",
-      password: "string",
-      money: 5,
-    },
-    submitted_user: {
-      id: -1,
-      username: "string",
-      password: "string",
-      money: 5,
-    },
+    user: null,
+    submitted_user: null,
 };
 
 export const userSlice = createSlice({

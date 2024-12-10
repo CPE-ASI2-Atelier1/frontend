@@ -1,23 +1,30 @@
+/**
+ * @author Evann Nalewajek
+ */
+
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
 import { useNavigate } from "react-router-dom";
 import { setPassword, setConfirmPassword } from "../slices/authSlice";
 import { update_user_action, submit_user_action } from "../slices/userSlice";
-import { IUser } from "../components/Login/containers/User";
+import IUser from "../types/IUser";
 
 export const Signup = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { password, confirmPassword, passwordMatch } = useSelector((state: RootState) => state.auth);
 
-    const [username, setUsername] = useState("");
+    const [login, setLogin] = useState("");
+    const [surName, setSurName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (!username.trim()) {
-            alert("Le nom d'utilisateur est requis !");
+        if (!login.trim() || !surName.trim() || !lastName.trim() || !email.trim()) {
+            alert("Tous les champs sont requis !");
             return;
         }
 
@@ -28,9 +35,13 @@ export const Signup = () => {
 
         const user: IUser = {
             id: Date.now(),
-            username,
-            password,
-            money: 0,
+            login,
+            pwd: password,
+            account: 0,
+            surName,
+            lastName,
+            email,
+            cardList: [],
         };
 
         dispatch(update_user_action({ user }));
@@ -45,13 +56,46 @@ export const Signup = () => {
             <h1>Créer un compte</h1>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="username">Nom d'utilisateur :</label><br />
+                    <label htmlFor="login">Nom d'utilisateur :</label><br />
                     <input
                         type="text"
-                        id="username"
-                        name="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        id="login"
+                        name="login"
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="surName">Prénom :</label><br />
+                    <input
+                        type="text"
+                        id="surName"
+                        name="surName"
+                        value={surName}
+                        onChange={(e) => setSurName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="lastName">Nom :</label><br />
+                    <input
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="email">Email :</label><br />
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </div>
@@ -80,9 +124,7 @@ export const Signup = () => {
                 {!passwordMatch && (
                     <p style={{ color: "red" }}>Les mots de passe ne correspondent pas !</p>
                 )}
-                <button type="submit">
-                    Créer un compte
-                </button>
+                <button type="submit">Créer un compte</button>
             </form>
         </div>
     );

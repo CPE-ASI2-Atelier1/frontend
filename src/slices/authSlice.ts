@@ -1,3 +1,7 @@
+/**
+ * @author Evann Nalewajek
+ */
+
 import { createSlice } from '@reduxjs/toolkit'
 
 export const authSlice = createSlice({

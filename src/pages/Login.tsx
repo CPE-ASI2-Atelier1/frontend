@@ -1,10 +1,29 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+/**
+ * @author Evann Nalewajek
+ */
+
+import React, { useState } from "react";
+import { login } from "../api/userService";
 
 export const Login = () => {
-    const handleLogin = (event: React.FormEvent) => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);
+
+    const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log("Authentification en cours...");
+        setError(null);
+
+        try {
+            const response = await login(username, password);
+
+            if (response) {
+                console.log("Utilisateur trouvé !");
+            }
+        } catch (error: any) {
+            setError("Nom d'utilisateur ou mot de passe incorrect !");
+            console.error(error);
+        }
     };
 
     return (
@@ -12,18 +31,28 @@ export const Login = () => {
             <h1>Se connecter</h1>
             <form onSubmit={handleLogin}>
                 <div>
-                    <label htmlFor="username">Nom :</label><br />
-                    <input type="text" id="username" name="username" required/>
+                    <label htmlFor="username">Nom d'utilisateur :</label><br />
+                    <input
+                        type="text"
+                        id="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
                     <label htmlFor="password">Mot de passe :</label><br />
-                    <input type="password" id="password" name="password" required/>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
                 </div>
+                {error && <p style={{ color: "red" }}>{error}</p>}
                 <button type="submit">Se connecter</button>
             </form>
-            <p>
-                Vous n'avez pas de compte ? <NavLink to="/signup">Créer un compte</NavLink>
-            </p>
         </div>
     );
 };

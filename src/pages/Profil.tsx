@@ -1,3 +1,7 @@
+/**
+ * @author Evann Nalewajek
+ */
+
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { User } from "../components/Login/containers/User";
@@ -5,7 +9,7 @@ import { User } from "../components/Login/containers/User";
 export const Profil = () => {
     const { submitted_user } = useSelector((state: RootState) => state.user);
 
-    if (!submitted_user.username) {
+    if (submitted_user == null) {
         return <p>Aucun utilisateur connecté.</p>;
     }
 

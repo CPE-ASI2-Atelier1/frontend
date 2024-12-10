@@ -20,7 +20,8 @@ function App() {
 
   const { submitted_user } = useSelector((state: RootState) => state.user);
     let user_login;
-    if (submitted_user.id == -1) {
+    console.log('App current user : ', submitted_user);
+    if (submitted_user == null) {
       user_login = (<NavLink to="/login">Se connecter</NavLink>)
     }
     else {
@@ -35,7 +36,6 @@ function App() {
                 <NavLink to="/">Home</NavLink>
                 <NavLink to="/display">Display</NavLink>
                 <NavLink to="/inventory">Inventory</NavLink>
-                <NavLink to="/login">Se connecter</NavLink>
                 <NavLink to="/create">CreateCard</NavLink>
                 {user_login}
                 <Routes>
