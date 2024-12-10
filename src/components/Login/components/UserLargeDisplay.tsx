@@ -1,10 +1,4 @@
-/**
- * @author Evann Nalewajek
- */
-
 import IUser from "../../../types/IUser";
-import { Card } from "../../Card/Card";
-import ICard from "../../../types/ICard";
 
 interface IProps {
     user: IUser;
@@ -19,16 +13,6 @@ export const UserLargeDisplay = (props: IProps) => {
             <p>Nom : {props.user.surName}</p>
             <p>Email : {props.user.email}</p>
             <p>Argent : {props.user.account}€</p>
-            <h4>Liste de cartes :</h4>
-            {props.user.cardList.length > 0 ? (
-                <div className="card-list">
-                    {props.user.cardList.map((card: ICard) => (
-                        <Card cardId={card.id} display="full"></Card>
-                    ))}
-                </div>
-            ) : (
-                <p>Aucune carte disponible.</p>
-            )}
         </div>
     );
 };

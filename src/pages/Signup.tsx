@@ -8,6 +8,7 @@ import { RootState } from "../store";
 import { useNavigate } from "react-router-dom";
 import { setPassword, setConfirmPassword } from "../slices/authSlice";
 import { update_user_action, submit_user_action } from "../slices/userSlice";
+import { register } from "../api/userService";
 import IUser from "../types/IUser";
 
 export const Signup = () => {
@@ -19,9 +20,11 @@ export const Signup = () => {
     const [surName, setSurName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
+    const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        setError(null);
 
         if (!login.trim() || !surName.trim() || !lastName.trim() || !email.trim()) {
             alert("Tous les champs sont requis !");
@@ -34,7 +37,7 @@ export const Signup = () => {
         }
 
         const user: IUser = {
-            id: Date.now(),
+            id: 0,
             login,
             pwd: password,
             account: 0,
@@ -44,11 +47,21 @@ export const Signup = () => {
             cardList: [],
         };
 
-        dispatch(update_user_action({ user }));
-        dispatch(submit_user_action({ user }));
+        try {
+            const createdUser = await register(user);
 
-        console.log("Compte créé avec succès :", user);
-        navigate("/");
+            console.log("Utilisateur créé avec succès :", createdUser);
+
+            // Mise à jour du store Redux avec le nouvel utilisateur
+            dispatch(update_user_action({ user: createdUser }));
+            dispatch(submit_user_action({ user: createdUser }));
+
+            // Redirection vers la page d'accueil
+            navigate("/");
+        } catch (error: any) {
+            setError("Erreur lors de l'inscription : " + error.message);
+            console.error(error);
+        }
     };
 
     return (
