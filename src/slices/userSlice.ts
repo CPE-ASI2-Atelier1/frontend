@@ -26,9 +26,12 @@ export const userSlice = createSlice({
             console.log('User to Submit', action.payload.user);
             state.submitted_user = action.payload.user;
         },
+        logout_user_action: (state) => {
+            state.user = null;
+        },
     },
 });
 
-export const { update_user_action, submit_user_action } = userSlice.actions;
+export const { update_user_action, submit_user_action, logout_user_action } = userSlice.actions;
 
 export default userSlice.reducer;
