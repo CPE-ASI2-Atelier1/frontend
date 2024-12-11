@@ -10,6 +10,7 @@ import { RootState } from "./store";
 import {CardDisplay} from "./pages/CardDisplay";
 import { User } from "./components/Login/containers/User";
 import {Home} from "./pages/Home.tsx";
+import {Market} from "./pages/Market.tsx";
 import {Inventory} from "./pages/Inventory.tsx";
 import { Login } from "./pages/Login.tsx";
 import { Signup } from "./pages/Signup";
@@ -48,6 +49,7 @@ function App() {
               <NavLink to="/display">Display</NavLink>
               <NavLink to="/inventory">Inventory</NavLink>
               <NavLink to="/create">CreateCard</NavLink>
+              <NavLink to="/market"> Market </NavLink>
               {user_login}
               <Routes>
                   <Route path="/display" element={<CardDisplay/>} />
@@ -57,6 +59,7 @@ function App() {
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/create" element={<CardCreation/>} />
                   <Route path="/profil" element={<Profil />} />
+                  <Route path="/market" element={<Market />} />
               </Routes>
           </BrowserRouter>
       </>
