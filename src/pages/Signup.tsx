@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { setPassword, setConfirmPassword } from "../slices/authSlice";
 import { update_user_action, submit_user_action } from "../slices/userSlice";
 import { register } from "../api/userService";
-import IUser from "../types/IUser";
 
 export interface formUser {
     login: string;
