@@ -26,38 +26,74 @@ function App() {
     dispatch(logout_user_action());
     window.location.reload();
   };
-  let user_login;
-  console.log('App current user : ', submitted_user);
-  if (submitted_user == null) {
-    user_login = (<NavLink to="/login">Se connecter</NavLink>)
-  }
-  else {
-  user_login = (<>
-                  <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
-                    Se déconnecter
-                  </button>
-                  <NavLink to="/profil"
-                    style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }}>
-                      <User user={submitted_user} display="short" />
-                  </NavLink>
-                </>)
-  }
+  // let user_login;
+  // console.log('App current user : ', submitted_user);
+  // if (submitted_user == null) {
+  //   user_login = (<NavLink to="/login">Se connecter</NavLink>)
+  // }
+  // else {
+  // user_login = (<>
+  //                 <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
+  //                   Se déconnecter
+  //                 </button>
+  //                 <NavLink to="/profil"
+  //                   style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }}>
+  //                     <User user={submitted_user} display="short" />
+  //                 </NavLink>
+  //                 <NavLink to="/display">Display</NavLink>
+  //                 <NavLink to="/inventory">Inventory</NavLink>
+  //                 <NavLink to="/create">CreateCard</NavLink>
+  //               </>)
+  // }
   return (
       <>
           <BrowserRouter>
-              <NavLink to="/">Home</NavLink>
-              <NavLink to="/display">Display</NavLink>
-              <NavLink to="/inventory">Inventory</NavLink>
-              <NavLink to="/create">CreateCard</NavLink>
-              <NavLink to="/market"> Market </NavLink>
-              {user_login}
+              <header>
+                  {/* Barre de navigation */}
+                  <nav style={{ display: "flex", alignItems: "center", gap: "15px", padding: "10px", borderBottom: "1px solid #ccc" }}>
+                      <NavLink to="/" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                          Home
+                      </NavLink>
+
+                      {submitted_user ? (
+                          <>
+                              <NavLink to="/display" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                                  Display
+                              </NavLink>
+                              <NavLink to="/inventory" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                                  Inventory
+                              </NavLink>
+                              <NavLink to="/create" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                                  CreateCard
+                              </NavLink>
+                              <NavLink to="/profil" style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }}>
+                                  <User user={submitted_user} display="short" />
+                              </NavLink>
+                              <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
+                                  Se déconnecter
+                              </button>
+                          </>
+                      ) : (
+                          <>
+                              <NavLink to="/login" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                                  Se connecter
+                              </NavLink>
+                              <NavLink to="/signup" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                                  S'inscrire
+                              </NavLink>
+                          </>
+                      )}
+                  </nav>
+              </header>
+
+              {/* Routes */}
               <Routes>
-                  <Route path="/display" element={<CardDisplay/>} />
-                  <Route path="/inventory" element={<Inventory/>} />
-                  <Route path="/" element={<Home/>} />
+                  <Route path="/" element={<Home />} />
+                  <Route path="/display" element={<CardDisplay />} />
+                  <Route path="/inventory" element={<Inventory />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
-                  <Route path="/create" element={<CardCreation/>} />
+                  <Route path="/create" element={<CardCreation />} />
                   <Route path="/profil" element={<Profil />} />
                   <Route path="/market" element={<Market />} />
               </Routes>

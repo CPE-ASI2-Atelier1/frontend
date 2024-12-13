@@ -14,13 +14,13 @@ import {RootState} from "../store.ts";
  * @constructor
  */
 export const Inventory =() => {
-
-    // const cardDisplay = useSelector((state:RootState ) => state.cardReducer.card)
     const cardId:number = useSelector((state:RootState ) => state.cardReducer.cardId)
+    // QUITTER L INVENTAIRE DEVRAIT REMETTRE LE STATE A NULL !
+    // TODO : ASSURER QUE ACHAT ET VENTE METTE AUSSI A JOUR L UTILISATEUR COURANT
 
-    const cardIds: number[] = [1, 2, 3, 4, 5 ] // Need to be coming from userService
+    const cardIds: number[] | undefined = useSelector((state:RootState) => state.user.user?.cardList)
     const cardRows = [] as React.ReactNode[];
-    cardIds.forEach((id:number) => {
+    cardIds?.forEach((id:number) => {
         cardRows.push(<Card cardId={id} display="row"/>);
     })
     return (
