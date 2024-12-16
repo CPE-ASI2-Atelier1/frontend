@@ -4,6 +4,7 @@
  */
 
 import './App.css';
+import { useNavigate } from 'react-router-dom';
 import {BrowserRouter, NavLink, Route, Routes} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store";
@@ -15,6 +16,7 @@ import {Inventory} from "./pages/Inventory.tsx";
 import { Login } from "./pages/Login.tsx";
 import { Signup } from "./pages/Signup";
 import {CardCreation} from "./pages/CardCreation.tsx";
+import {MyCreations} from "./pages/MyCreations.tsx";
 import { Profil } from "./pages/Profil";
 import { logout_user_action } from "./slices/userSlice";
 
@@ -22,9 +24,11 @@ function App() {
 
   const { submitted_user } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
+  //const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(logout_user_action());
     window.location.reload();
+    //navigate("/");
   };
   // let user_login;
   // console.log('App current user : ', submitted_user);
@@ -66,6 +70,12 @@ function App() {
                               <NavLink to="/create" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
                                   CreateCard
                               </NavLink>
+                              <NavLink to="/creations" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                                  My Creations
+                              </NavLink>
+                              <NavLink to="/market" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                                  Market
+                              </NavLink>
                               <NavLink to="/profil" style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }}>
                                   <User user={submitted_user} display="short" />
                               </NavLink>
@@ -90,10 +100,11 @@ function App() {
               <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/display" element={<CardDisplay />} />
-                  <Route path="/inventory" element={<Inventory />} />
+                  <Route path="/inventory" element={<Inventory isWip={false}/>} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/create" element={<CardCreation />} />
+                  <Route path="/creations" element={<MyCreations />} />
                   <Route path="/profil" element={<Profil />} />
                   <Route path="/market" element={<Market />} />
               </Routes>

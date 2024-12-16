@@ -3,21 +3,43 @@ import ICard from "../../types/ICard.ts";
 import {useEffect, useState} from "react";
 import {fetchWIPCard, generateProperties, addCard} from "../../api/cardService.ts";
 import {CardFull} from "../Card/containers/CardFull.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store.ts";
 
-const DEFAULT_CARD: ICard = {
-    name: "",
-    description: "",
-    family: "",
-    affinity: "",
-    imgUrl: "",
-    smallOmgUrl: "",
-    id: 0,
-    energy: 0,
-    hp: 0,
-    defence: 0,
-    attack: 0,
-    price: 0,
-    userId: 0,
+// const DEFAULT_CARD: ICard = {
+//     name: "",
+//     description: "",
+//     family: "",
+//     affinity: "",
+//     imgUrl: "",
+//     smallOmgUrl: "",
+//     id: 0,
+//     energy: 0,
+//     hp: 0,
+//     defence: 0,
+//     attack: 0,
+//     price: 0,
+//     userId: useSelector((state:RootState) => state.user.user?.id) ? state.user.user?.id : 0,
+// };
+
+const useDefaultCard = (): ICard => {
+    const userId = useSelector((state: RootState) => state.user.user?.id) || 0;
+
+    return {
+        name: "",
+        description: "",
+        family: "",
+        affinity: "",
+        imgUrl: "",
+        smallOmgUrl: "",
+        id: 0,
+        energy: 0,
+        hp: 0,
+        defence: 0,
+        attack: 0,
+        price: 0,
+        userId, // Utilise le userId dynamique
+    };
 };
 
 interface IProp {
@@ -25,12 +47,11 @@ interface IProp {
 }
 
 // TODO : display a coter ou on voit la card se créer en live
-
 export const CardForm = (props:IProp) => {
 
     console.log(props)
 
-    const [card, setCard] = useState<ICard>(DEFAULT_CARD);
+    const [card, setCard] = useState<ICard>(useDefaultCard());
 
     useEffect(() => {
         const loadCard = async (): Promise<void> => {

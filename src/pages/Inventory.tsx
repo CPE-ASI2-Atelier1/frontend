@@ -1,36 +1,66 @@
-/**
- * @author Arthur Jezequel
- */
+import { Card } from "../components/Card/Card.tsx";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../store.ts";
+import { fetchWIPCards } from "../api/wipCardService.ts";
+import { useNavigate } from 'react-router-dom';
 
-import {Card} from "../components/Card/Card.tsx";
-import React from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../store.ts";
+interface IProps {
+    isWip: boolean;
+}
 
-// TODO : This take the userId as input so it can fetch all cards of the current user (filter FetchAllCards() on userId)
+export const Inventory = (props: IProps) => {
+    const cardId: number = useSelector((state: RootState) => state.cardReducer.cardId ?? -1);
+    const userId: number | undefined = useSelector((state: RootState) => state.user.user?.id);
+    const finishedCardIds: number[] | undefined = useSelector((state: RootState) => state.user.user?.cardList);
+    
+    const [cardIds, setCardIds] = useState<number[] | undefined>(undefined);
+    const navigate = useNavigate();
 
-/**
- * Inventory page that displays all the user's card
- * @constructor
- */
-export const Inventory =() => {
-    const cardId:number = useSelector((state:RootState ) => state.cardReducer.cardId)
-    // QUITTER L INVENTAIRE DEVRAIT REMETTRE LE STATE A NULL !
-    // TODO : ASSURER QUE ACHAT ET VENTE METTE AUSSI A JOUR L UTILISATEUR COURANT
+    useEffect(() => {
+        const fetchCards = async () => {
+            if (props.isWip && userId !== undefined) {
+                try {
+                    console.log("Try to fetch cards for userID :"+userId);
+                    const cardList = await fetchWIPCards(userId);
+                    setCardIds(cardList.map((card) => card.id));
+                    console.log("Found cards : "+JSON.stringify(cardList)+" for userID :"+userId);
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des WIP cards:", error);
+                    setCardIds([]);
+                }
+            } else {
+                setCardIds(finishedCardIds);
+            }
+        };
 
-    const cardIds: number[] | undefined = useSelector((state:RootState) => state.user.user?.cardList)
+        fetchCards();
+    }, [props.isWip, userId, finishedCardIds]);
+
+    const editInCardCreator = (id: number) => {
+        navigate('/create', { state: { id } });
+    };
+
     const cardRows = [] as React.ReactNode[];
-    cardIds?.forEach((id:number) => {
-        cardRows.push(<Card cardId={id} display="row"/>);
-    })
+    console.log("Content of cardIds : "+JSON.stringify(cardIds));
+    cardIds?.forEach((id: number) => {
+        cardRows.push(<Card key={id} cardId={id} isWIP={props.isWip} display="row" />);
+    });
+
     return (
         <>
             <table>
-                {cardRows}
+                <tbody>{cardRows.length == 0 ? (<p>Créez de nouvelles cartes pour voir vos créations ici.</p>) : cardRows}</tbody>
             </table>
-            <div>
-                <Card cardId={cardId} display="full" />
-            </div>
+
+            {cardId !== -1 ? (
+                <div onClick={() => editInCardCreator(cardId)}>
+                    <Card cardId={cardId} isWIP={props.isWip} display="full" />
+                </div>
+            ) : (
+                <p>Veuillez sélectionner une carte.</p>
+            )}
+
         </>
     );
-}
+};
