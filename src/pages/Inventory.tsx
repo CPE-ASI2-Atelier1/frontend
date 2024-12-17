@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store.ts";
 import { fetchWIPCards } from "../api/wipCardService.ts";
 import { useNavigate } from 'react-router-dom';
+import styles from "./inventory.module.css";
 
 interface IProps {
     isWip: boolean;
@@ -48,19 +49,31 @@ export const Inventory = (props: IProps) => {
     });
 
     return (
-        <>
-            <table>
-                <tbody>{cardRows.length == 0 ? (<p>Créez de nouvelles cartes pour voir vos créations ici.</p>) : cardRows}</tbody>
-            </table>
+        <div className={styles["inventory-container"]}>
+            {/* Tableau des cartes */}
+            <div className={styles["card-table"]}>
+                {cardRows.length === 0 ? (
+                    <p className={styles["no-cards-message"]}>
+                        You may create new cards to see them here.
+                    </p>
+                ) : (
+                    cardRows
+                )}
+            </div>
 
+            {/* Affichage de la carte principale sélectionnée */}
             {cardId !== -1 ? (
-                <div onClick={() => editInCardCreator(cardId)}>
+                <div
+                    className={styles["selected-card-container"]}
+                    onClick={() => editInCardCreator(cardId)}
+                >
                     <Card cardId={cardId} isWIP={props.isWip} display="full" />
                 </div>
             ) : (
-                <p>Veuillez sélectionner une carte.</p>
+                <p className={styles["no-selection-message"]}>
+                    Please select a card.
+                </p>
             )}
-
-        </>
+        </div>
     );
 };

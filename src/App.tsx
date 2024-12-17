@@ -4,11 +4,9 @@
  */
 
 import './App.css';
-import { useNavigate } from 'react-router-dom';
 import {BrowserRouter, NavLink, Route, Routes} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store";
-import {CardDisplay} from "./pages/CardDisplay";
 import { User } from "./components/Login/containers/User";
 import {Home} from "./pages/Home.tsx";
 import {Market} from "./pages/Market.tsx";
@@ -24,72 +22,47 @@ function App() {
 
   const { submitted_user } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
-  //const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(logout_user_action());
-    window.location.reload();
-    //navigate("/");
+    window.location.replace("/");
   };
-  // let user_login;
-  // console.log('App current user : ', submitted_user);
-  // if (submitted_user == null) {
-  //   user_login = (<NavLink to="/login">Se connecter</NavLink>)
-  // }
-  // else {
-  // user_login = (<>
-  //                 <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
-  //                   Se déconnecter
-  //                 </button>
-  //                 <NavLink to="/profil"
-  //                   style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }}>
-  //                     <User user={submitted_user} display="short" />
-  //                 </NavLink>
-  //                 <NavLink to="/display">Display</NavLink>
-  //                 <NavLink to="/inventory">Inventory</NavLink>
-  //                 <NavLink to="/create">CreateCard</NavLink>
-  //               </>)
-  // }
   return (
       <>
           <BrowserRouter>
               <header>
                   {/* Barre de navigation */}
-                  <nav style={{ display: "flex", alignItems: "center", gap: "15px", padding: "10px", borderBottom: "1px solid #ccc" }}>
-                      <NavLink to="/" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
-                          Home
-                      </NavLink>
-
+                  <nav>
                       {submitted_user ? (
                           <>
-                              <NavLink to="/display" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
-                                  Display
+                              <NavLink to="/create" className={({ isActive }) => (isActive ? "isActive" : "")}>
+                                  New card
                               </NavLink>
-                              <NavLink to="/inventory" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
-                                  Inventory
-                              </NavLink>
-                              <NavLink to="/create" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
-                                  CreateCard
-                              </NavLink>
-                              <NavLink to="/creations" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                              <NavLink to="/creations" className={({ isActive }) => (isActive ? "isActive" : "")}>
                                   My Creations
                               </NavLink>
-                              <NavLink to="/market" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
+                              <NavLink to="/inventory" className={({ isActive }) => (isActive ? "isActive" : "")}>
+                                  Inventory
+                              </NavLink>
+                              <NavLink to="/market" className={({ isActive }) => (isActive ? "isActive" : "")}>
                                   Market
                               </NavLink>
-                              <NavLink to="/profil" style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }}>
+                              <NavLink to="/profil" className={({ isActive }) => (isActive ? "isActive" : "")}>
                                   <User user={submitted_user} display="short" />
                               </NavLink>
                               <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
-                                  Se déconnecter
+                                  Log Out
                               </button>
                           </>
                       ) : (
                           <>
-                              <NavLink to="/login" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
-                                  Se connecter
+                              <NavLink to="/" className={({ isActive }) => (isActive ? "isActive" : "")}>
+                                Home
                               </NavLink>
-                              <NavLink to="/signup" style={({ isActive }) => ({ fontWeight: isActive ? "bold" : "normal" })}>
-                                  S'inscrire
+                              <NavLink to="/login" className={({ isActive }) => (isActive ? "isActive" : "")}>
+                                  Sign In
+                              </NavLink>
+                              <NavLink to="/signup" className={({ isActive }) => (isActive ? "isActive" : "")}>
+                                  Sign Up
                               </NavLink>
                           </>
                       )}
@@ -99,7 +72,6 @@ function App() {
               {/* Routes */}
               <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/display" element={<CardDisplay />} />
                   <Route path="/inventory" element={<Inventory isWip={false}/>} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />

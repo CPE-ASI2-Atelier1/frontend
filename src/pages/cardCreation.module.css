@@ -1,0 +1,91 @@
+/* Conteneur principal : Centré avec une mise en page propre */
+.card-creation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f7;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Conteneur de la carte de création */
+.card-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Titre de la page de création */
+.card-form-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Message d'erreur ou de notification (si besoin) */
+.card-form-message {
+    font-size: 1.2rem;
+    color: #d9534f;
+    margin-top: 10px;
+}
+
+/* Formulaire de la carte */
+.card-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Bouton de soumission de la carte */
+.card-form-button {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    color: #fff;
+    background-color: #0071e3;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Effet hover sur le bouton */
+.card-form-button:hover {
+    background-color: #005bb5;
+}
+
+/* Ajout d'un léger padding entre les éléments du formulaire */
+.card-form-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.card-form-item label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.card-form-item input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ajout de l'espace de travail entre la création et la modification */
+.card-form-helper {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #777;
+}

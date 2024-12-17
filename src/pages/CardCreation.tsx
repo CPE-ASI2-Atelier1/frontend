@@ -1,7 +1,7 @@
 import {CardForm} from "../components/cardform/CardForm.tsx";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-//import {Card} from "../components/Card/Card.tsx"
+import './cardCreation.module.css';
 
 export const CardCreation =() => {
     const location = useLocation();
@@ -26,5 +26,4 @@ export const CardCreation =() => {
         }
         </>
     );
-    // <Card display={"full"} cardId={1}></Card>
 }

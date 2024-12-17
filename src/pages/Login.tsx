@@ -2,12 +2,14 @@
  * @author Evann Nalewajek
  */
 
+import "./login.module.css"
 import React, { useState } from "react";
 import { login, fetchUserById } from "../api/userService";
 import { useDispatch } from "react-redux";
 import { update_user_action, submit_user_action } from "../slices/userSlice";
 import { NavLink, useNavigate } from "react-router-dom";
 import IUser from "../types/IUser";
+import styles from "./login.module.css";
 
 export const Login = () => {
     const [username, setUsername] = useState("");
@@ -38,39 +40,44 @@ export const Login = () => {
             setError("Nom d'utilisateur ou mot de passe incorrect !");
             console.error("Erreur :", error);
         }
-        navigate("/");
+        navigate("/profil");
     };
 
     return (
-        <div>
-            <h1>Se connecter</h1>
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label htmlFor="username">Nom d'utilisateur :</label><br />
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Mot de passe :</label><br />
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                {error && <p style={{ color: "red" }}>{error}</p>}
-                <button type="submit">Se connecter</button>
-            </form>
-            <p>
-                Vous n'avez pas de compte ? <NavLink to="/signup">Créer un compte</NavLink>
-            </p>
+        <div className={styles["login-container"]}>
+            <div className={styles["login-card"]}>
+                <h1>log In</h1>
+                <form onSubmit={handleLogin}>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="username">Username :</label>
+                        <input
+                            type="text"
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="password">Password :</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    {error && <p className={styles["error-message"]}>{error}</p>}
+                    <button type="submit" className={styles["login-button"]}>
+                        Log In
+                    </button>
+                </form>
+                <p className={styles["signup-link"]}>
+                    You don't have an account ?{" "}
+                    <NavLink to="/signup">Create an account</NavLink>
+                </p>
+            </div>
         </div>
     );
 };

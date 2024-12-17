@@ -8,12 +8,12 @@ interface IProps {
 export const UserLargeDisplay = (props: IProps) => {
     return (
         <div>
-            <h2>ID : {props.user.id}</h2>
-            <h3>Nom d'utilisateur : {props.user.login}</h3>
-            <p>Prénom : {props.user.lastName}</p>
-            <p>Nom : {props.user.surName}</p>
+            <h2>My ID : {props.user.id}</h2>
+            <h3>Username : {props.user.login}</h3>
+            <p>Name : {props.user.lastName}</p>
+            <p>Surname : {props.user.surName}</p>
             <p>Email : {props.user.email}</p>
-            <p>Argent : {props.user.account}€</p>
+            <p>Money : {props.user.account}€</p>
         </div>
     );
 };

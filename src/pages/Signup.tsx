@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { setPassword, setConfirmPassword } from "../slices/authSlice";
 import { update_user_action, submit_user_action } from "../slices/userSlice";
 import { register } from "../api/userService";
+import styles from "./signup.module.css";
 
 export interface formUser {
     login: string;
@@ -33,12 +34,12 @@ export const Signup = () => {
         setError(null);
 
         if (!login.trim() || !surName.trim() || !lastName.trim() || !email.trim()) {
-            alert("Tous les champs sont requis !");
+            alert("All the fields are required");
             return;
         }
 
         if (!passwordMatch) {
-            alert("Les mots de passe ne correspondent pas !");
+            alert("The passwords provided aren't the same");
             return;
         }
 
@@ -59,8 +60,8 @@ export const Signup = () => {
             dispatch(update_user_action({ user: createdUser }));
             dispatch(submit_user_action({ user: createdUser }));
 
-            // Redirection vers la page d'accueil
-            navigate("/");
+            // Redirection vers la page du profile
+            navigate("/profil");
         } catch (error: any) {
             setError("Erreur lors de l'inscription : " + error.message);
             console.error(error);
@@ -68,80 +69,79 @@ export const Signup = () => {
     };
 
     return (
-        <div>
-            <h1>Créer un compte</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="login">Nom d'utilisateur :</label><br />
-                    <input
-                        type="text"
-                        id="login"
-                        name="login"
-                        value={login}
-                        onChange={(e) => setLogin(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="surName">Prénom :</label><br />
-                    <input
-                        type="text"
-                        id="surName"
-                        name="surName"
-                        value={surName}
-                        onChange={(e) => setSurName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="lastName">Nom :</label><br />
-                    <input
-                        type="text"
-                        id="lastName"
-                        name="lastName"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="email">Email :</label><br />
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Mot de passe :</label><br />
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => dispatch(setPassword(e.target.value))}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="confirmPassword">Confirmez le mot de passe :</label><br />
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={confirmPassword}
-                        onChange={(e) => dispatch(setConfirmPassword(e.target.value))}
-                        required
-                    />
-                </div>
-                {!passwordMatch && (
-                    <p style={{ color: "red" }}>Les mots de passe ne correspondent pas !</p>
-                )}
-                <button type="submit">Créer un compte</button>
-            </form>
+        <div className={styles["signup-container"]}>
+            <div className={styles["signup-card"]}>
+                <h1>Créer un compte</h1>
+                <form onSubmit={handleSubmit}>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="login">Username :</label>
+                        <input
+                            type="text"
+                            id="login"
+                            value={login}
+                            onChange={(e) => setLogin(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="surName">Name :</label>
+                        <input
+                            type="text"
+                            id="surName"
+                            value={surName}
+                            onChange={(e) => setSurName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="lastName">Surname :</label>
+                        <input
+                            type="text"
+                            id="lastName"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="email">Email :</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="password">Password :</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => dispatch(setPassword(e.target.value))}
+                            required
+                        />
+                    </div>
+                    <div className={styles["input-container"]}>
+                        <label htmlFor="confirmPassword">Confirm password :</label>
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            value={confirmPassword}
+                            onChange={(e) => dispatch(setConfirmPassword(e.target.value))}
+                            required
+                        />
+                    </div>
+                    {!passwordMatch && (
+                        <p className={styles["error-message"]}>The passords provided aren't the same</p>
+                    )}
+                    {error && <p className={styles["error-global"]}>{error}</p>}
+                    <button type="submit" className={styles["signup-button"]}>
+                        Create an account
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

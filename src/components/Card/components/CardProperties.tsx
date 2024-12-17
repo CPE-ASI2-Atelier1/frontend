@@ -10,12 +10,12 @@ export const CardProperties =(props:IProps) => {
         <table className="card-properties">
             <tbody>
                 <tr>
-                    <th>ATK : {props.attack}</th>
-                    <th>DEF : {props.defence}</th>
+                    <th>Attack : <br/>{props.attack}</th>
+                    <th>Defense : <br/> {props.defence}</th>
                 </tr>
                 <tr>
-                    <th>ENG : {props.energy}</th>
-                    <th>HP : {props.hp}</th>
+                    <th>Energie : <br/> {props.energy}</th>
+                    <th>Health : <br/> {props.hp}</th>
                 </tr>
             </tbody>
         </table>

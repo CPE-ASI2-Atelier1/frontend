@@ -5,22 +5,7 @@ import {fetchWIPCard, generateProperties, addCard} from "../../api/cardService.t
 import {CardFull} from "../Card/containers/CardFull.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store.ts";
-
-// const DEFAULT_CARD: ICard = {
-//     name: "",
-//     description: "",
-//     family: "",
-//     affinity: "",
-//     imgUrl: "",
-//     smallOmgUrl: "",
-//     id: 0,
-//     energy: 0,
-//     hp: 0,
-//     defence: 0,
-//     attack: 0,
-//     price: 0,
-//     userId: useSelector((state:RootState) => state.user.user?.id) ? state.user.user?.id : 0,
-// };
+import { useNavigate } from "react-router-dom";
 
 const useDefaultCard = (): ICard => {
     const userId = useSelector((state: RootState) => state.user.user?.id) || 0;
@@ -48,6 +33,8 @@ interface IProp {
 
 // TODO : display a coter ou on voit la card se créer en live
 export const CardForm = (props:IProp) => {
+
+    const navigate = useNavigate();
 
     console.log(props)
 
@@ -105,10 +92,12 @@ export const CardForm = (props:IProp) => {
     function handleSubmit() {
         console.log("Submitting...")
         addCard(card).then(r => console.log(r))
+        navigate("/creations");
     }
 
     return (
-        <>
+        <div className="card-form-container">
+            {/* Formulaire à gauche */}
             <form className="card-form">
                 <label htmlFor="name">Nom:</label>
                 <input
@@ -117,9 +106,8 @@ export const CardForm = (props:IProp) => {
                     name="name"
                     value={card.name}
                     onChange={(e) => handleChangeText(e.target)}
-                    required
                 />
-
+    
                 <label htmlFor="description">Description:</label>
                 <input
                     type="text"
@@ -127,8 +115,8 @@ export const CardForm = (props:IProp) => {
                     name="description"
                     value={card.description}
                     onChange={(e) => handleChangeText(e.target)}
-                    required/>
-
+                />
+    
                 <label htmlFor="family">Family:</label>
                 <input
                     type="text"
@@ -136,8 +124,8 @@ export const CardForm = (props:IProp) => {
                     name="family"
                     value={card.family}
                     onChange={(e) => handleChangeText(e.target)}
-                    required/>
-
+                />
+    
                 <label htmlFor="affinity">Affinity:</label>
                 <input
                     type="text"
@@ -145,8 +133,8 @@ export const CardForm = (props:IProp) => {
                     name="affinity"
                     value={card.affinity}
                     onChange={(e) => handleChangeText(e.target)}
-                    required/>
-
+                />
+    
                 <label htmlFor="imgUrl">Image URL:</label>
                 <input
                     type="text"
@@ -154,8 +142,8 @@ export const CardForm = (props:IProp) => {
                     name="imgUrl"
                     value={card.imgUrl}
                     onChange={(e) => handleChangeText(e.target)}
-                    required/>
-
+                />
+    
                 <label htmlFor="price">Price:</label>
                 <input
                     type="text"
@@ -163,36 +151,64 @@ export const CardForm = (props:IProp) => {
                     name="price"
                     value={card.price}
                     onChange={(e) => handleChangeNumber(e.target)}
-                    required
                 />
-
+    
                 <label htmlFor="attack">Attack:</label>
                 <input
                     type="text"
                     id="attack"
                     name="attack"
                     value={card.attack}
-                    readOnly required/>
-
+                    readOnly
+                />
+    
                 <label htmlFor="defense">Defense:</label>
-                <input type="text" id="defense" name="defense" value={card.defence} readOnly required/>
-
-                <label htmlFor="energy">Energy:</label>
-                <input type="text" id="energy" name="energy" value={card.energy} readOnly required/>
-
-                <label htmlFor="hp">HP:</label>
-                <input type="text" id="hp" name="hp" value={card.hp} readOnly required/>
-
-                <input type="button" id="generateProperties" value="Generate Props" onClick={handleProperties}/>
-
                 <input
-                    type="submit"
+                    type="text"
+                    id="defense"
+                    name="defense"
+                    value={card.defence}
+                    readOnly
+                />
+    
+                <label htmlFor="energy">Energy:</label>
+                <input
+                    type="text"
+                    id="energy"
+                    name="energy"
+                    value={card.energy}
+                    readOnly
+                />
+    
+                <label htmlFor="hp">HP:</label>
+                <input
+                    type="text"
+                    id="hp"
+                    name="hp"
+                    value={card.hp}
+                    readOnly
+                />
+    
+                <input
+                    type="button"
+                    id="generateProperties"
+                    value="Generate Props"
+                    onClick={handleProperties}
+                />
+    
+                <input
+                    //type="submit"
+                    type="button"
                     id="createCard"
                     value="Create Card"
-                    onClick={handleSubmit}/>
-
+                    onClick={handleSubmit}
+                />
             </form>
-            <CardFull card={card}></CardFull>
-        </>
-    )
+    
+            {/* Carte affichée à droite */}
+            <div className="card-full">
+                <CardFull card={card} />
+            </div>
+        </div>
+    );    
 }

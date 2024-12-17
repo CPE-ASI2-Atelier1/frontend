@@ -6,6 +6,7 @@ import {Card} from "../components/Card/Card.tsx"
 import {fetchCards, buyCard} from "../api/marketService";
 import ICard from "../types/ICard"
 import {useState, useEffect} from "react";
+import "./market.module.css"
 
 enum CardDisplay {
     FULL = "full",
@@ -38,43 +39,60 @@ export const Market=()=> {
     }, []);
 
     const cardRow = cards.map((card: ICard) => (
-        // <table onClick={() => setSelectedCard(card)} key={card.id}>
-        // <thead>
-        //   <tr>
-        //     <th>Name</th>
-        //     <th>Price</th>
-        //     <th>Attack</th>
-        //     <th>Defence</th>
-        //     <th>Energy</th>
-        //   </tr>
-        // </thead>
             <tbody onClick={() => setSelectedCard(card)} key={card.id}>
                 <CardRow card={card} />
             </tbody>
-        // </table>
     ));
 
     return (
         <div className="market-full">
-            <table>
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Attack</th>
-                    <th>Defence</th>
-                    <th>Energy</th>
-                    <th>User Id</th>
-                </tr>
-                </thead>
-                {cardRow}
-            </table>
+            <div className="market-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Attack</th>
+                            <th>Defence</th>
+                            <th>Energy</th>
+                            <th>User Id</th>
+                        </tr>
+                    </thead>
+                    {cardRow}
+                </table>
+            </div>
             {selectedCard && (
-                <div className="showInfos">
-                    <Card display={CardDisplay.FULL} cardId={selectedCard.id}></Card>
-                    <button id="buyCard" value="Buy" onClick={() => buyCard(selectedCard.userId, selectedCard.id)}/>
-                </div>
-            )}
+            <div className="card-section">
+                <Card display={CardDisplay.FULL} cardId={selectedCard.id} isWIP={false}/>
+                <button id="buyCard" onClick={() => buyCard(selectedCard.userId, selectedCard.id)}>
+                    Buy
+                </button>
+            </div>
+    )}
         </div>
     )
 }
+
+
+
+        // <div className="market-full">
+        //     <table>
+        //         <thead>
+        //         <tr>
+        //             <th>Name</th>
+        //             <th>Price</th>
+        //             <th>Attack</th>
+        //             <th>Defence</th>
+        //             <th>Energy</th>
+        //             <th>User Id</th>
+        //         </tr>
+        //         </thead>
+        //         {cardRow}
+        //     </table>
+        //     {selectedCard && (
+        //         <div className="showInfos">
+        //             <Card display={CardDisplay.FULL} cardId={selectedCard.id} isWIP={false}/>
+        //             <button id="buyCard" value="Buy" onClick={() => buyCard(selectedCard.userId, selectedCard.id)}/>
+        //         </div>
+        //     )}
+        // </div>
