@@ -15,11 +15,13 @@ import { Login } from "./pages/Login.tsx";
 import { Signup } from "./pages/Signup";
 import {CardCreation} from "./pages/CardCreation.tsx";
 import { Profil } from "./pages/Profil";
+import { Game } from "./pages/Game";
 import { logout_user_action } from "./slices/userSlice";
 
 function App() {
 
   const { submitted_user } = useSelector((state: RootState) => state.user);
+  
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logout_user_action());
@@ -44,10 +46,11 @@ function App() {
   return (
       <>
           <BrowserRouter>
-              <NavLink to="/">Home</NavLink>
-              <NavLink to="/display">Display</NavLink>
-              <NavLink to="/inventory">Inventory</NavLink>
-              <NavLink to="/create">CreateCard</NavLink>
+              <NavLink to="/">  Home  </NavLink>
+              <NavLink to="/display">  Display  </NavLink>
+              <NavLink to="/inventory">  Inventory  </NavLink>
+              <NavLink to="/create">  CreateCard  </NavLink>
+              <NavLink to="/game">  Game    </NavLink>
               {user_login}
               <Routes>
                   <Route path="/display" element={<CardDisplay/>} />
@@ -57,6 +60,7 @@ function App() {
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/create" element={<CardCreation/>} />
                   <Route path="/profil" element={<Profil />} />
+                  <Route path="/game" element={<Game />} />
               </Routes>
           </BrowserRouter>
       </>

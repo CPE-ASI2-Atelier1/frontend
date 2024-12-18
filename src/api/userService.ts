@@ -50,6 +50,27 @@ export const fetchUserById = async (userId: number): Promise<IUser> => {
     return await response.json();
 };
 
+export const fetchAllUsers = async (): Promise<IUser[]> => {
+    try{
+        const url: string = base_url+"/users";
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur lors de la récupération des utilisateurs`);
+        }
+
+        return await response.json();
+    } catch (error){
+        console.error('Erreur lors de la requête fetchAllUsers:', error);
+        return [];
+    }
+};
+
 export const register = async (user: formUser): Promise<IUser> => {
     const url: string = base_url+"/user";
 
@@ -58,6 +79,7 @@ export const register = async (user: formUser): Promise<IUser> => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(user),
     });
 
