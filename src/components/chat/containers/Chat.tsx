@@ -7,7 +7,7 @@ import { Messages } from '../components/Messages';
 import { InputChat } from '../components/InputChat';
 import { RootState } from '../../../store';
 import IMessage from '../../../types/IMessage';
-import { fetchAllUsers, fetchUserById } from '../../../api/userService';
+import { fetchAllUsers } from '../../../api/userService';
 import { SelectReceiver } from '../components/SelectReceiver';
 import IUser from '../../../types/IUser';
 
@@ -87,10 +87,3 @@ export const Chat = (props:IProps) => {
         </div>
     );
 };
-
-/**
- * ChatContainerFull
-    * h2
-    * ChatBubble
-    * ChatInput
- */

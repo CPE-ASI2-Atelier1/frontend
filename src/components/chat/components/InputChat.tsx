@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { io, Socket } from 'socket.io-client'; // Import de socket.io-client
+import React, { useState } from 'react';
+import { Socket } from 'socket.io-client'; // Import de socket.io-client
 
 interface IProps {
     socket: Socket; // On passe le socket en prop pour pouvoir l'utiliser
