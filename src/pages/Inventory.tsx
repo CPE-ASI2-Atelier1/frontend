@@ -11,7 +11,12 @@ interface IProps {
 }
 
 export const Inventory = (props: IProps) => {
-    const cardId: number = useSelector((state: RootState) => state.cardReducer.cardId ?? -1);
+    let cardId: number = useSelector((state: RootState) => state.cardReducer.cardId ?? -1);
+    
+    // Manigance pour ne pas hériter du cardID de l'inventaire 
+    //lorsqu'on clique sur l'onglet Create cards.
+    //props.isWip ? cardId=-1 : cardId=cardId; 
+
     const userId: number | undefined = useSelector((state: RootState) => state.user.user?.id);
     const finishedCardIds: number[] | undefined = useSelector((state: RootState) => state.user.user?.cardList);
     
@@ -48,10 +53,11 @@ export const Inventory = (props: IProps) => {
         cardRows.push(<Card key={id} cardId={id} isWIP={props.isWip} display="row" />);
     });
 
+    console.log("Card id : "+ cardId)
     return (
         <div className={styles["inventory-container"]}>
             {/* Tableau des cartes */}
-            <div className={styles["card-table"]}>
+            <table className={styles["card-table"]}>
                 {cardRows.length === 0 ? (
                     <p className={styles["no-cards-message"]}>
                         You may create new cards to see them here.
@@ -59,7 +65,7 @@ export const Inventory = (props: IProps) => {
                 ) : (
                     cardRows
                 )}
-            </div>
+            </table>
 
             {/* Affichage de la carte principale sélectionnée */}
             {cardId !== -1 ? (
@@ -70,9 +76,10 @@ export const Inventory = (props: IProps) => {
                     <Card cardId={cardId} isWIP={props.isWip} display="full" />
                 </div>
             ) : (
-                <p className={styles["no-selection-message"]}>
-                    Please select a card.
-                </p>
+                // <p className={styles["no-selection-message"]}>
+                //     Please select a card.
+                // </p>
+                <p></p>
             )}
         </div>
     );

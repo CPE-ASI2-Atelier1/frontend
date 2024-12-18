@@ -63,7 +63,7 @@ export const Signup = () => {
             // Redirection vers la page du profile
             navigate("/profil");
         } catch (error: any) {
-            setError("Erreur lors de l'inscription : " + error.message);
+            setError("Sign up error " + error.message);
             console.error(error);
         }
     };
@@ -71,7 +71,7 @@ export const Signup = () => {
     return (
         <div className={styles["signup-container"]}>
             <div className={styles["signup-card"]}>
-                <h1>Créer un compte</h1>
+                <h1>Create an account</h1>
                 <form onSubmit={handleSubmit}>
                     <div className={styles["input-container"]}>
                         <label htmlFor="login">Username :</label>

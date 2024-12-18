@@ -54,15 +54,6 @@ export const CardForm = (props:IProp) => {
         loadCard();
     }, [props.cardId]);
 
-    // if (props.cardId === -1){
-    //     return (
-    //         <div></div>
-    //     )
-    // }
-    // if (!card) {
-    //     setCard(DEFAULT_CARD);
-    // }
-
     function handleChangeNumber(event: EventTarget & HTMLInputElement): void {
         const value : number = Number(event.value)
         if (isNaN(value)) {
@@ -71,27 +62,27 @@ export const CardForm = (props:IProp) => {
         }
         const property : string = event.name;
         setCard({...card, [property] : value})
-        console.log(card)
+        console.log("Card status on number change : " + JSON.stringify(card))
     }
 
     function handleChangeText(event: EventTarget & HTMLInputElement): void {
         const value : string = event.value
         const property : string = event.name;
-        //value.replace('<', '').replace('>', '');
         setCard({...card, [property] : value})
-        console.log(card)
+        console.log("Card status on text change : " + JSON.stringify(card))
     }
 
     function handleProperties() {
         generateProperties(card).then(r => {
-            console.log("id card received")
-            console.log(r)
+            console.log("Card Id received : "+ r)
+            card.id = r;
+            navigate("/creations");
         });
     }
 
     function handleSubmit() {
         console.log("Submitting...")
-        addCard(card).then(r => console.log(r))
+        addCard(card).then(r => console.log("Card status on submission : "+ JSON.stringify(r)))
         navigate("/creations");
     }
 

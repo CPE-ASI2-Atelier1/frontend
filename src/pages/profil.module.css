@@ -36,7 +36,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.4); /* Fond semi-transparent */
+    /*background: rgba(0, 0, 0, 0.4);  Fond semi-transparent */
     pointer-events: none;
 }
 

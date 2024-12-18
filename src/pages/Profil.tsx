@@ -9,21 +9,6 @@ import styles from "./profil.module.css";
 
 export const Profil = () => {
     const { submitted_user } = useSelector((state: RootState) => state.user);
-
-//     return (
-//         <div className={styles["profil-container"]}>
-//             {submitted_user ? (
-//                 <div className={styles["profil-content"]}>
-//                     <h1 className={styles["profil-title"]}>Profil</h1>
-//                     <User user={submitted_user} display="large" />
-//                 </div>
-//             ) : (
-//                 <p className={styles["no-user-message"]}>Aucun utilisateur connecté.</p>
-//             )}
-//         </div>
-//     );
-// };
-    
     return (
         <div className={styles["profil-container"]}>
             {submitted_user ? (
