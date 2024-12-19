@@ -48,6 +48,9 @@ function App() {
                               <NavLink to="/market" className={({ isActive }) => (isActive ? "isActive" : "")}>
                                   Market
                               </NavLink>
+                              <NavLink to="/game" className={({ isActive }) => (isActive ? "isActive" : "")}>  
+                                  Play Game    
+                              </NavLink>
                               <NavLink to="/profil" className={({ isActive }) => (isActive ? "isActive" : "")}>
                                   <User user={submitted_user} display="short" />
                               </NavLink>
@@ -66,8 +69,6 @@ function App() {
                               <NavLink to="/signup" className={({ isActive }) => (isActive ? "isActive" : "")}>
                                   Sign Up
                               </NavLink>
-                              <NavLink to="/game">  Game    </NavLink>
-
                           </>
                       )}
                   </nav>
@@ -82,6 +83,8 @@ function App() {
                   <Route path="/create" element={<CardCreation />} />
                   <Route path="/creations" element={<MyCreations />} />
                   <Route path="/profil" element={<Profil />} />
+                  <Route path="/market" element={<Market />} />
+                  <Route path="/game" element={<Game />} />
               </Routes>
           </BrowserRouter>
       </>

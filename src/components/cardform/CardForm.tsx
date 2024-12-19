@@ -1,7 +1,7 @@
 import "./CardForm.css"
 import ICard from "../../types/ICard.ts";
 import {useEffect, useState} from "react";
-import {fetchWIPCard, generateProperties, addCard} from "../../api/cardService.ts";
+import {fetchWIPCard, generateProperties, addCard, delWipCard} from "../../api/cardService.ts";
 import {CardFull} from "../Card/containers/CardFull.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store.ts";
@@ -18,7 +18,7 @@ const useDefaultCard = (): ICard => {
         imgUrl: "",
         smallOmgUrl: "",
         id: 0,
-        energy: 0,
+        energy: null,
         hp: 0,
         defence: 0,
         attack: 0,
@@ -72,7 +72,20 @@ export const CardForm = (props:IProp) => {
         console.log("Card status on text change : " + JSON.stringify(card))
     }
 
+    function isValidUrl(value: string): boolean {
+        try {
+            new URL(value);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
     function handleProperties() {
+        if (!isValidUrl(card.imgUrl)){
+            alert("Please enter a valid URL to generate the properties");
+            return;
+        }
         generateProperties(card).then(r => {
             console.log("Card Id received : "+ r)
             card.id = r;
@@ -81,22 +94,46 @@ export const CardForm = (props:IProp) => {
     }
 
     function handleSubmit() {
+        // Validation manuelle pour les champs readonly
+        if (card.energy === null || card.energy === undefined) {
+            alert("Energy is required !\nYou may write an Image URL and generate properties.");
+            return;
+        }
+        if (card.attack === 0) {
+            alert("Attack is required!\nYou may write an Image URL and generate properties.");
+            return;
+        }
+        if (card.defence === 0) {
+            alert("Defence is required!\nYou may write an Image URL and generate properties.");
+            return;
+        }
+        if (card.hp === 0) {
+            alert("HP is required!\nYou may write an Image URL and generate properties.");
+            return;
+        }
         console.log("Submitting...")
-        addCard(card).then(r => console.log("Card status on submission : "+ JSON.stringify(r)))
-        navigate("/creations");
+        addCard(card).then(r => console.log("Card added to the market : "+ JSON.stringify(r)))
+        console.log("ID of the card to delete form wip db : "+props.cardId);
+        delWipCard(props.cardId);
+        navigate("/market");
     }
 
     return (
         <div className="card-form-container">
             {/* Formulaire à gauche */}
-            <form className="card-form">
-                <label htmlFor="name">Nom:</label>
+            <form className="card-form"onSubmit={(e) => {
+                e.preventDefault(); // Empêche le rechargement de la page
+                handleSubmit();
+            }}>
+                <h1>Card Creator</h1>
+                <label htmlFor="name">Name:</label>
                 <input
                     type="text"
                     id="name"
                     name="name"
                     value={card.name}
                     onChange={(e) => handleChangeText(e.target)}
+                    required
                 />
     
                 <label htmlFor="description">Description:</label>
@@ -106,6 +143,7 @@ export const CardForm = (props:IProp) => {
                     name="description"
                     value={card.description}
                     onChange={(e) => handleChangeText(e.target)}
+                    required
                 />
     
                 <label htmlFor="family">Family:</label>
@@ -115,6 +153,7 @@ export const CardForm = (props:IProp) => {
                     name="family"
                     value={card.family}
                     onChange={(e) => handleChangeText(e.target)}
+                    required
                 />
     
                 <label htmlFor="affinity">Affinity:</label>
@@ -124,6 +163,7 @@ export const CardForm = (props:IProp) => {
                     name="affinity"
                     value={card.affinity}
                     onChange={(e) => handleChangeText(e.target)}
+                    required
                 />
     
                 <label htmlFor="imgUrl">Image URL:</label>
@@ -133,6 +173,7 @@ export const CardForm = (props:IProp) => {
                     name="imgUrl"
                     value={card.imgUrl}
                     onChange={(e) => handleChangeText(e.target)}
+                    required
                 />
     
                 <label htmlFor="price">Price:</label>
@@ -142,6 +183,7 @@ export const CardForm = (props:IProp) => {
                     name="price"
                     value={card.price}
                     onChange={(e) => handleChangeNumber(e.target)}
+                    required
                 />
     
                 <label htmlFor="attack">Attack:</label>
@@ -149,8 +191,9 @@ export const CardForm = (props:IProp) => {
                     type="text"
                     id="attack"
                     name="attack"
-                    value={card.attack}
+                    value={card.attack ? card.attack : undefined}
                     readOnly
+                    required
                 />
     
                 <label htmlFor="defense">Defense:</label>
@@ -158,8 +201,9 @@ export const CardForm = (props:IProp) => {
                     type="text"
                     id="defense"
                     name="defense"
-                    value={card.defence}
+                    value={card.defence ? card.defence : undefined}
                     readOnly
+                    required
                 />
     
                 <label htmlFor="energy">Energy:</label>
@@ -167,8 +211,9 @@ export const CardForm = (props:IProp) => {
                     type="text"
                     id="energy"
                     name="energy"
-                    value={card.energy}
+                    value={card.energy ? card.energy : undefined}
                     readOnly
+                    required
                 />
     
                 <label htmlFor="hp">HP:</label>
@@ -176,8 +221,9 @@ export const CardForm = (props:IProp) => {
                     type="text"
                     id="hp"
                     name="hp"
-                    value={card.hp}
+                    value={card.hp ? card.hp : undefined}
                     readOnly
+                    required
                 />
     
                 <input
@@ -188,11 +234,9 @@ export const CardForm = (props:IProp) => {
                 />
     
                 <input
-                    //type="submit"
-                    type="button"
+                    type="submit"
                     id="createCard"
                     value="Create Card"
-                    onClick={handleSubmit}
                 />
             </form>
     

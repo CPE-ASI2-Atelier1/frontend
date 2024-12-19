@@ -6,10 +6,10 @@ export default interface ICard {
     imgUrl: string;
     smallOmgUrl: string;
     id: number;
-    energy: number;
-    hp: number;
-    defence: number;
-    attack: number;
+    energy: number | null;
+    hp: number | null ;
+    defence: number | null;
+    attack: number | null;
     price: number;
     userId: number;
 }

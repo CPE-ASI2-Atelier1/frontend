@@ -4,9 +4,8 @@
 
 import React from 'react';
 import { Chat } from '../components/chat/containers/Chat';
-import './Game.css';
+import './Game.module.css';
 import { GameBoard } from '../components/gameboard/GameBoard';
-
 
 export const Game: React.FC = () => {
     return (

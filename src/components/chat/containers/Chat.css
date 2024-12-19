@@ -46,3 +46,7 @@
 .chat-input-container button:hover {
     background-color: #45a049;
 }
+
+h1 {
+    margin-top:20px;
+}

@@ -15,7 +15,7 @@ export const fetchCards = async () : Promise<ICard[]> => {
     if (!response.ok) {
         throw new Error(`Failed to fetch cards : ${response.statusText}`);
     }
-    return await response.json(); //TODO: A voir pour retourner plutot une liste de ICard...
+    return await response.json();
 }
 
 export const buyCard = async (user_id : number, card_id : number) : Promise<boolean> => {

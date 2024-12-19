@@ -1,5 +1,6 @@
-import "./Messages.css";
+//import "./Messages.css";
 import IUser from "../../../types/IUser";
+import "./SelectReceiver.css";
 
 interface IProps {
     users: IUser[];
@@ -9,14 +10,14 @@ interface IProps {
 
 export const SelectReceiver =(props:IProps)=> {
     return (
-        <div className="recevier-select">
-            <label htmlFor="receiverSelect">Choisissez un utilisateur :</label>
+        <div className="receiver-select">
+            <label htmlFor="receiverSelect">Select a user</label>
             <select 
                 id="receiverSelect" 
                 value={props.receiverId || ''} 
                 onChange={(e) => props.setReceiverId(Number(e.target.value))}
             >
-                <option value="">-- Sélectionner un utilisateur --</option>
+                <option value="" disabled>Please select someone to chat with</option>
                 {props.users.map((user) => (
                     <option key={user.id} value={user.id}>
                         {user.login} (ID: {user.id})

@@ -1,0 +1,31 @@
+.game-board-container {
+    display: flex;
+    width: 100vw; /* Prend toute la largeur de la fenêtre */
+    height: 100vh; /* Prend toute la hauteur de la fenêtre */
+    background: rgba(255, 255, 255, 0.1); /* Effet translucide harmonisé */
+    backdrop-filter: blur(10px); /* Effet verre subtil */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Ombre douce pour effet 3D */
+    overflow: hidden; /* Masque tout débordement */
+}
+
+.chat-section {
+    flex: 1 1 30%; /* Occupe 30% de l'espace */
+    height: 100%; 
+    border-right: 1px solid rgba(255, 255, 255, 0.3); /* Ligne de séparation subtile */
+    background: linear-gradient(135deg, rgba(240, 240, 240, 0.5), rgba(200, 200, 200, 0.2)); /* Dégradé léger */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-section {
+    flex: 2 1 70%; /* Occupe 70% de l'espace */
+    height: 100%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05); /* Fond plus discret */
+    padding: 20px;
+}

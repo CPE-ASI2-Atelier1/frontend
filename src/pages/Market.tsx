@@ -6,7 +6,9 @@ import {Card} from "../components/Card/Card.tsx"
 import {fetchCards, buyCard} from "../api/marketService";
 import ICard from "../types/ICard"
 import {useState, useEffect} from "react";
-import "./market.module.css"
+import { RootState } from "../store.ts";
+import { useSelector } from "react-redux";
+import styles from "./market.module.css"
 
 enum CardDisplay {
     FULL = "full",
@@ -19,10 +21,10 @@ enum CardDisplay {
  * @constructor
  */
 export const Market=()=> {
-
-    //const cards = props.cards;
-    const [selectedCard, setSelectedCard] = useState<ICard | null>(null);
+    let cardId: number = useSelector((state: RootState) => state.cardReducer.cardId ?? -1);
+    let userId: number = useSelector((state: RootState) => state.user.user?.id ?? -1);
     const [cards, setCards] = useState<ICard[]>([]);
+    let cardList : ICard[] = [];
 
     useEffect(() => {
         const loadCards = async () => {
@@ -38,61 +40,53 @@ export const Market=()=> {
         loadCards();
     }, []);
 
-    const cardRow = cards.map((card: ICard) => (
-            <tbody onClick={() => setSelectedCard(card)} key={card.id}>
+    // Permet de ne garder que les cartes qui ne sont pas 
+    // possédées par quelqu'un mais que des cartes créées
+    cards.forEach((card: ICard) => { 
+       !card.userId && cardList.push(card) 
+    })
+
+    const cardRow = cardList.map((card: ICard) => (
                 <CardRow card={card} />
-            </tbody>
     ));
 
     return (
-        <div className="market-full">
-            <div className="market-table">
+        <div className={styles["market-container"]}>
+            <div className={styles["card-table"]}>
                 <table>
+                    {cardList.length !== 0 ?
+                    (
+                    <>
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Description</th>
                             <th>Price</th>
                             <th>Attack</th>
                             <th>Defence</th>
                             <th>Energy</th>
-                            <th>User Id</th>
+                            <th>Health</th>
                         </tr>
                     </thead>
-                    {cardRow}
+                    <tbody>
+                        {cardRow}
+                    </tbody>
+                    </>
+                    ):( 
+                        <tbody>
+                            <tr className={styles["no-cards-message"]}><p>No any card to buy yet, try to come later !</p></tr>
+                        </tbody>
+                    )}
                 </table>
             </div>
-            {selectedCard && (
-            <div className="card-section">
-                <Card display={CardDisplay.FULL} cardId={selectedCard.id} isWIP={false}/>
-                <button id="buyCard" onClick={() => buyCard(selectedCard.userId, selectedCard.id)}>
-                    Buy
-                </button>
-            </div>
+            {cardId !== -1 && cardList.length !== 0 && (
+            <div className={styles["selected-card-container"]}>
+            <Card display={CardDisplay.FULL} cardId={cardId} isWIP={false}/>
+            <button id="buyCard" onClick={() => buyCard(userId, cardId)}>
+                Buy
+            </button>
+        </div>
     )}
         </div>
     )
 }
-
-
-
-        // <div className="market-full">
-        //     <table>
-        //         <thead>
-        //         <tr>
-        //             <th>Name</th>
-        //             <th>Price</th>
-        //             <th>Attack</th>
-        //             <th>Defence</th>
-        //             <th>Energy</th>
-        //             <th>User Id</th>
-        //         </tr>
-        //         </thead>
-        //         {cardRow}
-        //     </table>
-        //     {selectedCard && (
-        //         <div className="showInfos">
-        //             <Card display={CardDisplay.FULL} cardId={selectedCard.id} isWIP={false}/>
-        //             <button id="buyCard" value="Buy" onClick={() => buyCard(selectedCard.userId, selectedCard.id)}/>
-        //         </div>
-        //     )}
-        // </div>

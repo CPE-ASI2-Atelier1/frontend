@@ -1,4 +1,4 @@
-import "./Messages.css";
+//import "./Messages.css";
 import IMessage from "../../../types/IMessage";
 
 interface IProps {
@@ -30,7 +30,7 @@ export const Messages = (props: IProps) => {
                         key={index} 
                         className="chat-message received-message"
                     >
-                        <strong>Utilisateur {message.senderId} : </strong> 
+                        <strong>User {message.senderId} : </strong> 
                         {message.message}
                     </div>
                 ))}

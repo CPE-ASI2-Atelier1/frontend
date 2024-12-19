@@ -12,14 +12,8 @@ interface IProps {
 
 export const Inventory = (props: IProps) => {
     let cardId: number = useSelector((state: RootState) => state.cardReducer.cardId ?? -1);
-    
-    // Manigance pour ne pas hériter du cardID de l'inventaire 
-    //lorsqu'on clique sur l'onglet Create cards.
-    //props.isWip ? cardId=-1 : cardId=cardId; 
-
     const userId: number | undefined = useSelector((state: RootState) => state.user.user?.id);
     const finishedCardIds: number[] | undefined = useSelector((state: RootState) => state.user.user?.cardList);
-    
     const [cardIds, setCardIds] = useState<number[] | undefined>(undefined);
     const navigate = useNavigate();
 
@@ -27,7 +21,7 @@ export const Inventory = (props: IProps) => {
         const fetchCards = async () => {
             if (props.isWip && userId !== undefined) {
                 try {
-                    console.log("Try to fetch cards for userID :"+userId);
+                    console.log("Try to fetch cards for userID : "+userId);
                     const cardList = await fetchWIPCards(userId);
                     setCardIds(cardList.map((card) => card.id));
                     console.log("Found cards : "+JSON.stringify(cardList)+" for userID :"+userId);
@@ -56,19 +50,34 @@ export const Inventory = (props: IProps) => {
     console.log("Card id : "+ cardId)
     return (
         <div className={styles["inventory-container"]}>
+            <div className={styles["card-table"]}>
             {/* Tableau des cartes */}
-            <table className={styles["card-table"]}>
-                {cardRows.length === 0 ? (
-                    <p className={styles["no-cards-message"]}>
-                        You may create new cards to see them here.
-                    </p>
-                ) : (
-                    cardRows
-                )}
+            <table>
+            {cardRows.length !== 0 && (
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Attack</th>
+                        <th>Defence</th>
+                        <th>Energy</th>
+                        <th>Health</th>
+                    </tr>
+                </thead>)}
+                <tbody>
+                    {cardRows.length === 0 ? (
+                            <tr className={styles["no-cards-message"]}>
+                                <p>You may create new cards to see them here.</p>
+                            </tr>
+                    ) : (
+                        cardRows
+                    )}
+                    </tbody>
             </table>
-
+            </div>
             {/* Affichage de la carte principale sélectionnée */}
-            {cardId !== -1 ? (
+            {cardId !== -1 && cardRows.length !== 0 && cardIds?.includes(cardId) ? (
                 <div
                     className={styles["selected-card-container"]}
                     onClick={() => editInCardCreator(cardId)}

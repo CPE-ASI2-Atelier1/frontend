@@ -1,7 +1,6 @@
 /* Conteneur principal */
-.market-full {
+.market-container {
     display: flex;
-    flex-wrap: nowrap; /* Empêche les enfants de passer à la ligne */
     justify-content: space-between;
     align-items: flex-start;
     gap: 40px;
@@ -11,52 +10,41 @@
     box-sizing: border-box;
 }
 
-/* Conteneur du tableau */
-.market-table {
-    flex: 3; /* Définit la proportion par rapport à la carte */
+/* Conteneur du tableau des cartes */
+.card-table {
+    flex: 3; /* Prend 3 fois plus d'espace que la carte sélectionnée */
     background-color: #fff;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow-y: auto; /* Permet le défilement si nécessaire */
-    max-height: 80vh;
-    width: 0; /* Garantit que flex fonctionne correctement */
+    overflow-y: auto; /* Scroll si trop d'éléments */
+    max-height: 80vh; /* Limite la hauteur */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.market-table table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-}
-
-.market-table th,
-.market-table td {
-    text-align: left;
-    padding: 12px 16px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.market-table th {
+/* Une carte dans le tableau (mode "row") */
+.card-table .card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
     background-color: #f9f9fb;
-    color: #6e6e73;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.market-table tbody tr {
-    background-color: #fff;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.market-table tbody tr:hover {
-    background-color: #f1f1f3;
-    transform: scale(1.01);
+.card-table .card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Conteneur de la carte et du bouton */
-.card-section {
-    flex: 2; /* Moins large que le tableau */
+/* Conteneur de la carte principale */
+.selected-card-container {
+    flex: 2; /* Prend 2 fois l'espace du tableau */
     background-color: #fff;
     border-radius: 12px;
     padding: 20px;
@@ -68,11 +56,10 @@
     gap: 20px;
     max-height: 80vh;
     overflow-y: auto;
-    width: 0; /* Garantit que flex fonctionne correctement */
 }
 
-/* Carte affichée */
-.card-section .card {
+/* Carte principale (mode "full") */
+.selected-card-container .card {
     width: 100%;
     max-width: 500px;
     border-radius: 12px;
@@ -80,40 +67,19 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Bouton d'achat */
-#buyCard {
-    padding: 12px 20px;
-    background-color: #0071e3;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    align-self: flex-end; /* Positionne le bouton à droite */
-    margin-top: 20px;
-}
-
-#buyCard:hover {
-    background-color: #005bb5;
-    transform: scale(1.05);
-}
-
-/* Gestion des scrollbars */
-.market-table::-webkit-scrollbar,
-.card-section::-webkit-scrollbar {
+/* Scrolling doux */
+.card-table::-webkit-scrollbar,
+.selected-card-container::-webkit-scrollbar {
     width: 8px;
 }
 
-.market-table::-webkit-scrollbar-thumb,
-.card-section::-webkit-scrollbar-thumb {
+.card-table::-webkit-scrollbar-thumb,
+.selected-card-container::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
 }
 
-.market-table::-webkit-scrollbar-thumb:hover,
-.card-section::-webkit-scrollbar-thumb:hover {
+.card-table::-webkit-scrollbar-thumb:hover,
+.selected-card-container::-webkit-scrollbar-thumb:hover {
     background-color: rgba(0, 0, 0, 0.3);
 }

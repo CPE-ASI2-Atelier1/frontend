@@ -1,76 +1,91 @@
+/* Mise à jour pour un style inspiré d'Apple avec effet "verre" 3D pour informations */
+
 .card-container {
-    width: 300px; /* Taille de la carte */
-    height: 400px; /* Proportions idéales pour une carte */
-    background: linear-gradient(135deg, #f9d423, #ff4e50); /* Dégradé de fond */
-    border: 3px solid #333; /* Bordure noire épaisse */
-    border-radius: 15px; /* Coins arrondis */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Ombre pour un effet 3D */
-    overflow: hidden; /* Assure que les débordements sont masqués */
+    width: 100%; /* Full width */
+    max-width: 500px; /* Largeur maximale équilibrée */
+    height: auto; /* Hauteur adaptable au contenu */
+    background: rgba(111, 102, 236, 0.1); /* Fond translucide effet verre */
+    backdrop-filter: blur(15px); /* Effet de flou pour fond */
+    border: 3px solid rgba(9, 9, 9, 0.548); /* Bordure subtile et lumineuse */
+    border-radius: 20px; /* Coins légèrement arrondis */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); /* Ombre douce pour effet 3D */
+    overflow: hidden; /* Masque les débordements */
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    font-family: 'Arial', sans-serif; /* Typographie propre */
-    color: #333; /* Couleur de texte par défaut */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #222; /* Couleur de texte plus sombre pour contraste */
     text-align: center;
-    padding: 10px;
+    padding: 20px; /* Espacement interne */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition pour effet hover */
+}
+
+.card-container:hover {
+    transform: translateY(-5px) scale(1.02); /* Légère élévation et agrandissement au survol */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* Ombre renforcée au survol */
+    background: rgba(128, 185, 212, 0.2); /* Fond légèrement modifié au survol */
 }
 
 .card-name {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Effet brillant pour le nom */
-    margin: 10px 0;
+    font-size: 2rem; /* Taille de police équilibrée */
+    font-weight: 700; /* Légèrement gras */
+    color: #000; /* Couleur de texte noire */
+    margin: 5px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre subtile pour le texte */
 }
 
 .card-media {
-    width: 90%;
-    height: 60%;
-    background-color: #fff; /* Zone blanche où le média s'affiche */
-    border-radius: 10px;
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2); /* Ombre intérieure */
+    width: 100%;
+    max-width: 400px; /* Largeur maximale pour limiter la taille */
+    height: 300px; /* Taille raisonnable pour une proportion équilibrée */
+    background-color: rgba(255, 255, 255, 0.2); /* Fond translucide clair */
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5), 0 4px 8px rgba(0, 0, 0, 0.2); /* Effet lumineux interne */
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden; /* Cache les débordements */
+    overflow: hidden;
+    border-radius: 10%;
+    margin: 20px 0;
 }
 
 .card-media img,
 .card-media video {
     max-width: 100%;
     max-height: 100%;
-    object-fit: cover; /* Assure un bon rendu des médias */
+    object-fit: cover; /* Bon rendu des médias */
     border-radius: 10px;
 }
 
 .card-properties {
-    width: 90%; /* Largeur ajustée pour s'intégrer à la carte */
-    margin: 10px auto; /* Espacement pour centrer la table */
-    background-color: rgba(255, 255, 255, 0.9); /* Fond légèrement translucide */
-    border-radius: 8px; /* Coins arrondis */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Ombre douce */
-    border-collapse: collapse; /* Style propre pour la table */
-    font-size: 1rem; /* Taille de texte standard */
-    color: #333; /* Couleur de texte */
+    width: 75%; /* Largeur ajustée pour réduire l'espace */
+    margin: 10px auto;
+    background-color: rgba(255, 255, 255, 0.15); /* Fond translucide clair pour effet verre */
+    backdrop-filter: blur(10px); /* Transparence avec flou renforcé */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Ombre douce */
+    border-collapse: collapse;
+    font-size: 0.85rem; /* Taille de texte légèrement réduite pour compacité */
+    color: #333;
     overflow: hidden;
 }
 
 .card-properties th {
-    padding: 10px; /* Espacement à l'intérieur des cellules */
-    text-align: center; /* Texte centré */
-    background-color: #f0f0f0; /* Fond des cellules d'en-tête */
-    border: 1px solid #ccc; /* Bordure entre les cellules */
-    font-weight: bold; /* Texte en gras */
+    padding: 10px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.25); /* Fond translucide pour en-tête */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Ligne de séparation subtile */
+    font-weight: 600;
 }
 
 .card-properties td {
-    padding: 8px; /* Espacement pour les cellules */
-    text-align: center; /* Texte centré */
-    border: 1px solid #ddd; /* Bordure discrète */
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Bordure discrète */
 }
 
 .card-properties tr:nth-child(even) {
-    background-color: #f9f9f9; /* Couleur de fond alternée pour les lignes */
+    background-color: rgba(255, 255, 255, 0.1); /* Lignes alternées pour lisibilité */
 }
