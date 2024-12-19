@@ -12,13 +12,15 @@ interface IProps {
 
 export const Inventory = (props: IProps) => {
     let cardId: number = useSelector((state: RootState) => state.cardReducer.cardId ?? -1);
-    const userId: number | undefined = useSelector((state: RootState) => state.user.user?.id);
-    const finishedCardIds: number[] | undefined = useSelector((state: RootState) => state.user.user?.cardList);
+    //const userId: number | undefined = useSelector((state: RootState) => state.user.user?.id);
+    const userId: number | undefined = useSelector((state: RootState) => state.user.submitted_user?.id);
+    const finishedCardIds: number[] | undefined = useSelector((state: RootState) => state.user.submitted_user?.cardList);
     const [cardIds, setCardIds] = useState<number[] | undefined>(undefined);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCards = async () => {
+            console.log("User ID : "+userId);
             if (props.isWip && userId !== undefined) {
                 try {
                     console.log("Try to fetch cards for userID : "+userId);
@@ -38,7 +40,7 @@ export const Inventory = (props: IProps) => {
     }, [props.isWip, userId, finishedCardIds]);
 
     const editInCardCreator = (id: number) => {
-        navigate('/create', { state: { id } });
+        props.isWip ?? navigate('/create', { state: { id } });
     };
 
     const cardRows = [] as React.ReactNode[];
@@ -68,7 +70,7 @@ export const Inventory = (props: IProps) => {
                 <tbody>
                     {cardRows.length === 0 ? (
                             <tr className={styles["no-cards-message"]}>
-                                <p>You may create new cards to see them here.</p>
+                                <td>You may create new cards to see them here.</td>
                             </tr>
                     ) : (
                         cardRows

@@ -6,6 +6,7 @@
 import './App.css';
 import {BrowserRouter, NavLink, Route, Routes} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from 'react';
 import { RootState } from "./store";
 import { User } from "./components/Login/containers/User";
 import {Home} from "./pages/Home.tsx";
@@ -17,13 +18,36 @@ import {CardCreation} from "./pages/CardCreation.tsx";
 import {MyCreations} from "./pages/MyCreations.tsx";
 import { Profil } from "./pages/Profil";
 import { Game } from "./pages/Game";
-import { logout_user_action } from "./slices/userSlice";
+import { logout_user_action, submit_user_action } from "./slices/userSlice";
+import Cookies from 'js-cookie';
+import { fetchUserById } from "./api/userService";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  let { submitted_user } = useSelector((state: RootState) => state.user);
 
-  const { submitted_user } = useSelector((state: RootState) => state.user);
-  
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const userId = Cookies.get('user');
+    if (userId) {
+      fetchUserById(parseInt(userId))
+        .then(user => {
+          // Mettre à jour l'utilisateur dans Redux
+          dispatch(submit_user_action({ user }));
+          setIsAuthenticated(true);
+          console.log("Utilisateur mis dans les cookies :", user);
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération de l\'utilisateur', error);
+          setIsAuthenticated(false);
+        });
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, [dispatch]);
+  console.log("Valeur de submitted_user :", submitted_user);
+  
   const handleLogout = () => {
     dispatch(logout_user_action());
     window.location.replace("/");
@@ -34,7 +58,7 @@ function App() {
               <header>
                   {/* Barre de navigation */}
                   <nav>
-                      {submitted_user ? (
+                      {submitted_user && isAuthenticated ? (
                           <>
                               <NavLink to="/create" className={({ isActive }) => (isActive ? "isActive" : "")}>
                                   New card

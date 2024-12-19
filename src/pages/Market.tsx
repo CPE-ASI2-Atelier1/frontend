@@ -47,7 +47,7 @@ export const Market=()=> {
     })
 
     const cardRow = cardList.map((card: ICard) => (
-                <CardRow card={card} />
+                <CardRow key= {card.id} card={card} />
     ));
 
     return (
@@ -74,14 +74,14 @@ export const Market=()=> {
                     </>
                     ):( 
                         <tbody>
-                            <tr className={styles["no-cards-message"]}><p>No any card to buy yet, try to come later !</p></tr>
+                            <tr className={styles["no-cards-message"]}><td>No any card to buy yet, try to come later !</td></tr>
                         </tbody>
                     )}
                 </table>
             </div>
             {cardId !== -1 && cardList.length !== 0 && (
             <div className={styles["selected-card-container"]}>
-            <Card display={CardDisplay.FULL} cardId={cardId} isWIP={false}/>
+            <Card display={CardDisplay.FULL} cardId={cardId} key={cardId} isWIP={false}/>
             <button id="buyCard" onClick={() => buyCard(userId, cardId)}>
                 Buy
             </button>
