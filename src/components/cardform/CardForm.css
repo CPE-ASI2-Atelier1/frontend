@@ -11,7 +11,7 @@
     box-sizing: border-box;
 }
 
-h1 {
+.card-h1 {
     font-size: 2rem; /* Taille légèrement plus grande pour le titre principal */
     font-weight: 700; /* Titre bien marqué */
     text-align: center; /* Centré horizontalement */

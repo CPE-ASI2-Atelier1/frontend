@@ -22,8 +22,7 @@ import { logout_user_action, submit_user_action } from "./slices/userSlice";
 import Cookies from 'js-cookie';
 import { fetchUserById } from "./api/userService";
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+function App() { 
   let { submitted_user } = useSelector((state: RootState) => state.user);
 
   const dispatch = useDispatch();
@@ -35,20 +34,17 @@ function App() {
         .then(user => {
           // Mettre à jour l'utilisateur dans Redux
           dispatch(submit_user_action({ user }));
-          setIsAuthenticated(true);
           console.log("Utilisateur mis dans les cookies :", user);
         })
         .catch(error => {
           console.error('Erreur lors de la récupération de l\'utilisateur', error);
-          setIsAuthenticated(false);
         });
-    } else {
-      setIsAuthenticated(false);
     }
   }, [dispatch]);
   console.log("Valeur de submitted_user :", submitted_user);
   
   const handleLogout = () => {
+    Cookies.remove('user');
     dispatch(logout_user_action());
     window.location.replace("/");
   };
@@ -58,7 +54,7 @@ function App() {
               <header>
                   {/* Barre de navigation */}
                   <nav>
-                      {submitted_user && isAuthenticated ? (
+                      {submitted_user ? (
                           <>
                               <NavLink to="/create" className={({ isActive }) => (isActive ? "isActive" : "")}>
                                   New card

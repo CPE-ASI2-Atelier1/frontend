@@ -18,7 +18,7 @@ interface IProps {
 }
 
 export const Chat = (props:IProps) => {
-    const user = useSelector((state:RootState) => state.user.user); // Sélectionne l'id de l'utilisateur dans le store
+    const user = useSelector((state:RootState) => state.user.submitted_user); // Sélectionne l'id de l'utilisateur dans le store
     
     // const messages = useSelector((state: { chat: { messages: string[] } }) => state.chat.messages); // Sélectionne les messages dans le store
     const [receivedMessages, setReceivedMessages] = useState<IMessage[]>([]); // Liste des messages reçus
@@ -79,7 +79,7 @@ export const Chat = (props:IProps) => {
     return (
 
         <div className="chat-container">
-            <h1>Chat</h1>
+            <h1 className="card-h1">Chat</h1>
             <SelectReceiver users={users} receiverId={receiverId} setReceiverId={setReceiverId} />
             <Messages receivedMessages={receivedMessages} sentMessages={sentMessages} userId={user.id} />
 

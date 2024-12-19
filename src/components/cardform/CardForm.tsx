@@ -8,7 +8,8 @@ import {RootState} from "../../store.ts";
 import { useNavigate } from "react-router-dom";
 
 const useDefaultCard = (): ICard => {
-    const userId = useSelector((state: RootState) => state.user.user?.id) || 0;
+    //const userId = useSelector((state: RootState) => state.user.user?.id) || 0;
+    const userId = useSelector((state: RootState) => state.user.submitted_user?.id) || 0;
 
     return {
         name: "",
@@ -31,7 +32,6 @@ interface IProp {
     cardId: number; // Si -1, la carte n'existe pas...
 }
 
-// TODO : display a coter ou on voit la card se créer en live
 export const CardForm = (props:IProp) => {
 
     const navigate = useNavigate();
@@ -125,7 +125,7 @@ export const CardForm = (props:IProp) => {
                 e.preventDefault(); // Empêche le rechargement de la page
                 handleSubmit();
             }}>
-                <h1>Card Creator</h1>
+                <h1 className="card-h1" >Card Creator</h1>
                 <label htmlFor="name">Name:</label>
                 <input
                     type="text"

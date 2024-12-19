@@ -40,7 +40,8 @@ export const Inventory = (props: IProps) => {
     }, [props.isWip, userId, finishedCardIds]);
 
     const editInCardCreator = (id: number) => {
-        props.isWip ?? navigate('/create', { state: { id } });
+        console.log("Props Is WIP : "+props.isWip);
+        props.isWip && navigate('/create', { state: { id } });
     };
 
     const cardRows = [] as React.ReactNode[];
