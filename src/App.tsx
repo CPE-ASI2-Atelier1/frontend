@@ -9,14 +9,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store";
 import { User } from "./components/Login/containers/User";
 import {Home} from "./pages/Home.tsx";
-import {Market} from "./pages/Market.tsx";
 import {Inventory} from "./pages/Inventory.tsx";
 import { Login } from "./pages/Login.tsx";
 import { Signup } from "./pages/Signup";
 import {CardCreation} from "./pages/CardCreation.tsx";
 import {MyCreations} from "./pages/MyCreations.tsx";
 import { Profil } from "./pages/Profil";
-import { Game } from "./pages/Game";
 import { logout_user_action } from "./slices/userSlice";
 
 function App() {

@@ -9,9 +9,10 @@ import ICard from "../types/ICard.ts"
  * @return Promise A promise for the response as a list of ICard objects
  */
 
+const base_url: string = `${import.meta.env.VITE_MONOLITH_URL}`
+
 export const fetchCards = async () : Promise<ICard[]> => {
-    const url :String = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`
-    const response = await fetch(`${url}/cards`);
+    const response = await fetch(`${base_url}/cards`);
     if (!response.ok) {
         throw new Error(`Failed to fetch cards : ${response.statusText}`);
     }
@@ -19,7 +20,7 @@ export const fetchCards = async () : Promise<ICard[]> => {
 }
 
 export const buyCard = async (user_id : number, card_id : number) : Promise<boolean> => {
-    const url : string = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}/store/buy`
+    const url : string = `${base_url}/store/buy`
     try {
         const response = await fetch(url,
             {

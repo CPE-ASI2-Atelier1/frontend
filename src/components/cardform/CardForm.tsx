@@ -1,7 +1,8 @@
 import "./CardForm.css"
 import ICard from "../../types/ICard.ts";
 import {useEffect, useState} from "react";
-import {fetchWIPCard, generateProperties, addCard} from "../../api/cardService.ts";
+import {addCard} from "../../api/cardService.ts";
+import {fetchWIPCard, generateProperties} from "../../api/wipCardService.ts";
 import {CardFull} from "../Card/containers/CardFull.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store.ts";
