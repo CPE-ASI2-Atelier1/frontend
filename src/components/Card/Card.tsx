@@ -49,7 +49,7 @@ export const Card=(props:IProps) => {
     }, [props.cardId]);
 
     if (props.cardId === -1){
-        return (
+        return; (
             <div></div>
         )
     }

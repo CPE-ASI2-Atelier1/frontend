@@ -30,11 +30,13 @@ export const CardRow=(props:IProps)=> {
             <td>
                 <CardName title={props.card.name}></CardName>
             </td>
+            <td>{props.card.description}</td>
             <td>{props.card.price}</td>
             <td>{props.card.attack}</td>
             <td>{props.card.defence}</td>
             <td>{props.card.energy}</td>
-            <td>{props.card.userId}</td>
+            <td>{props.card.hp}</td>
+            {/* <td>{props.card.userId}</td> */}
         </tr>
     )
 }

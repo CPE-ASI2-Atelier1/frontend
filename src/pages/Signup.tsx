@@ -10,6 +10,7 @@ import { setPassword, setConfirmPassword } from "../slices/authSlice";
 import { update_user_action, submit_user_action } from "../slices/userSlice";
 import { register } from "../api/userService";
 import styles from "./signup.module.css";
+import Cookies from 'js-cookie';
 
 export interface formUser {
     login: string;
@@ -54,6 +55,9 @@ export const Signup = () => {
         try {
             const createdUser = await register(user);
 
+            // Mise de l'id du user dans les cookies en tant que token
+            // À terme le token sera généré par le serveur pour l'aspect sécuritaire
+            Cookies.set('user', createdUser.id.toString(), { expires: 7, path: '/' }); 
             console.log("Utilisateur créé avec succès :", createdUser);
 
             // Mise à jour du store Redux avec le nouvel utilisateur
