@@ -5,7 +5,6 @@ import './Chat.css';
 import { Messages } from '../components/Messages';
 import { InputChat } from '../components/InputChat';
 import IMessage from '../../../types/IMessage';
-import { fetchAllUsers } from '../../../api/userService';
 import { SelectReceiver } from '../components/SelectReceiver';
 import IUser from '../../../types/IUser';
 

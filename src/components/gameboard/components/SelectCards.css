@@ -29,8 +29,8 @@
 }
 
 .card-item.selected {
-    border: 2px solid #007bff;
-    background-color: #e6f7ff;
+    background-color: #d1e7dd; /* Light green background for selection */
+    border-color: #0f5132; /* Dark green border */
 }
 
 .next-button {
@@ -38,12 +38,18 @@
     padding: 10px 20px;
     font-size: 16px;
     color: white;
-    background-color: #007bff;
+    background-color: #ccc; /* Disabled gray */
     border: none;
     border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    cursor: not-allowed;
+    transition: background-color 0.3s ease-in-out;
 }
+
+.next-button.active {
+    background-color: #007bff; /* Blue when active */
+    cursor: pointer;
+}
+
 
 .next-button:hover {
     background-color: #0056b3;

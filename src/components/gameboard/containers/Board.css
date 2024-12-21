@@ -5,8 +5,30 @@ body {
 .board-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    width: 90%; /* Prend 90% de la largeur parent */
+    max-width: 1900px; /* Largeur maximale */
+    margin: 0 auto; /* Centre horizontalement */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff; /* Fond blanc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.board-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.cards-wrapper {
     width: 100%;
-    height: 80%; /* S'assure que le chat utilise 80% de l'espace parent */
+    display: flex;
+    flex-wrap: wrap; /* Les cartes peuvent aller à la ligne */
+    gap: 20px; /* Espacement entre les cartes */
+    justify-content: center; /* Centrer les cartes dans le conteneur */
 }
 
 .progress {

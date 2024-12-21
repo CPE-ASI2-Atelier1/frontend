@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import { RootState } from "../../store.ts";
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
+
 import IUser from "../../types/IUser.ts";
 import {Board} from "./containers/Board.tsx";
 import './GameBoard.css';
 import { GAME_ACTIONS } from '../../constants/gameActions.ts';
 import { SelectCards } from "./components/SelectCards.tsx";
 import { Socket } from "socket.io-client";
+import { fetchCard } from "../../api/cardService.ts";
 import ICard from "../../types/ICard.ts";
+import { fetchUserById } from "../../api/userService.ts";
 
 interface IProps{
     user: IUser;
@@ -21,27 +22,20 @@ export const GameBoard = (props:IProps) => {
     // const gameState = useSelector((state: RootState) => state.gameState); // Sélection de l'état global du plateau
     const [gameState, setGameState] = useState(0);
     //changer le gamestate dans un store pour eviter que quand on par et revient ça part
-    const [selectedCards, setSelectedCards] = useState<number[]>([]);
+    const [selectedCards, setSelectedCards] = useState<ICard[]>([]);
+    const [enemyCards, setEnemyCards] = useState<ICard[]>([]);
+    const [enemy, setEnemy] = useState<IUser>();
 
     const user = props.user;
-
-    // useEffect(() => {
-    //     // Mise à jour de l'état général du plateau à 1 (jeu en cours)
-    //     dispatch({ type: 'UPDATE_GAME_STATE', payload: 1 });
-
-    //     // Cleanup: remettre à 0 lorsqu'on quitte le composant
-    //     return () => {
-    //         dispatch({ type: 'UPDATE_GAME_STATE', payload: 0 });
-    //     };
-    // }, [dispatch]);
 
     useEffect(() => {
         if (!socket) return;
 
         // Écoute des événements uniquement de type GAME_ACTIONS
-        socket.on(GAME_ACTIONS.GAME_STARTS, (data) => {
-            console.log('🎮 Game has started!', data);
-            setGameState(3); // Indique que la partie a commencé
+        socket.on(GAME_ACTIONS.GAME_STARTS, (enemyC) => {
+            console.log('🎮 Game has started!', enemyC);
+            // TODO enlever les 2, enemyId sera le seul envoyé
+            handleGameStart(enemyC.cardsIds, setEnemyCards, setGameState);
         });
 
         socket.on(GAME_ACTIONS.START_TURN, () => {
@@ -54,6 +48,11 @@ export const GameBoard = (props:IProps) => {
 
         socket.on(GAME_ACTIONS.CARD_SELECTION, (data) => {
             console.log('🃏 Select your cards!', data);
+            if(data.userId)
+                {handleEnemyUser(data.userId);}
+            else{
+                handleEnemyUser(data.enemyId);
+            }
             setGameState(2);
         });
 
@@ -88,14 +87,31 @@ export const GameBoard = (props:IProps) => {
     }
 
     // TODO : faire cette fonction pour qu'elle envoie fin du tour au serveur 
+    const handleGameStart = async (enemyC: number[], setEnemyCards: (cards: any[]) => void, setGameState: (state: number) => void) => {
+        try {
+            console.log(enemyC)
+            const cardList = await fetchCards(enemyC);
+            console.log(cardList);
+            setEnemyCards(cardList);
+            setGameState(4);
+        } catch (error) {
+            console.error("Error fetching enemy cards:", error);
+            setGameState(-1);
+        }
+    };
+
+    const handleEnemyUser = async (enemyId:  number) => {
+        console.log("enemyId", enemyId);
+        try {
+            const enemy = await fetchUserById(enemyId);
+            setEnemy(enemy);
+        } catch (error) {
+            console.error("Error setting enemy user:", error);
+            setGameState(-1);
+        }
+    }
     const endTurn = () => {
         console.log("fin du tour");
-    }
-
-    const next = (selectedCards : ICard[]) => {
-        // Send selected cards to server
-        socket.emit("WAITING_CARDS", { id: Number(user.id), cards: selectedCards });
-        console.log(`User ${user.id} selected cards:`, selectedCards);
     }
 
     const startGame = () => {
@@ -105,10 +121,45 @@ export const GameBoard = (props:IProps) => {
         setGameState(1);
     }
 
-    const cardsSelection = (cards: number[]) => {
+    const fetchCards = async (cards: number[]) => {
+        let cardList = [];
+        for (let i = 0; i < cards.length; i++) {
+            const card = await fetchCard(cards[i]);
+            cardList.push(card);
+        }
+
+        return cardList;
+    }
+
+    const cardsSelection = async (cards: number[]) => {
         console.log(cards);
-        setSelectedCards(cards);
-        setGameState(3);
+        try {
+            // Attendez la réponse de fetchCards avant de procéder
+            const cardList = await fetchCards(cards);
+            console.log(cardList);
+            setSelectedCards(cardList);
+    
+            // Créez cards2 à partir de cardList après l'appel asynchrone
+            const cards2 = cardList.map(({ id, attack, defence, energy, name, hp }) => ({
+                id,
+                attack,
+                defence,
+                energy,
+                name,
+                hp,
+            }));
+    
+            console.log(cards2);
+    
+            // Émettez l'événement une fois que tout est prêt
+            socket.emit("WAITING_CARDS", { id: Number(user.id), cards: cards2 });
+    
+            // Mettez à jour l'état du jeu
+            setGameState(3);
+        } catch (error) {
+            console.error("Error fetching cards or updating state:", error);
+            setGameState(-1);
+        }
     }
 
     if (!user) {
@@ -137,7 +188,7 @@ export const GameBoard = (props:IProps) => {
     if (gameState === 2) {
         return (
                 <div>
-                    <SelectCards cards={user.cardList} setSelectedCards={cardsSelection}/>
+                    <SelectCards cardIds={user.cardList} cardsAreSelected={cardsSelection}/>
                 </div>
         )
     }
@@ -151,17 +202,25 @@ export const GameBoard = (props:IProps) => {
             </div>
         )
     }
-    return (
+    if (gameState === 4 && enemy) {
+        return (
         <div className="gameboard-container">
             <div className="row">
-                <Board user={userExample} />
+                <Board user={enemy} cards={enemyCards}/>
             </div> 
             <div className="end-turn-container">
                 <button onClick={endTurn}>End Turn</button>
             </div>
             <div className="row">
-                <Board user={user} />
+                <Board user={user} cards={selectedCards}/>
             </div>
         </div>
-    )
+    )}
+    return (
+        <div>
+            Problem with the gameboard state pls refresh
+        </div>
+    );
+    
+
 }

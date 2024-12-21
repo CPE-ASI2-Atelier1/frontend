@@ -1,0 +1,36 @@
+.card-table {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
+    gap: 15px; /* Space between cards */
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 400px; /* Limit the table height */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.card-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px; /* Smaller padding for compact layout */
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 3 / 4; /* Maintain card aspect ratio */
+    transition: background-color 0.2s ease-in-out;
+}
+
+.card-item img {
+    max-width: 100%; /* Ensure image fits within card */
+    max-height: 100%;
+    object-fit: cover; /* Ensure no distortion */
+}
+
+.card-item:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+}
