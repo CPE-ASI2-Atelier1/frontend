@@ -9,7 +9,7 @@ const dev: string = `${import.meta.env.VITE_ENV}`
 if (dev === "DEV") {
     url = `${import.meta.env.VITE_MONOLITH_URL}`
 } else {
-    url = `${import.meta.env.VITE_PROXY_URL}`
+    url = ""
 }
 
 /**

@@ -6,7 +6,7 @@ const dev: string = `${import.meta.env.VITE_ENV}`
 if (dev === "DEV") {
     base_url = `${import.meta.env.VITE_MONOLITH_URL}`
 } else {
-    base_url = `${import.meta.env.VITE_PROXY_URL}`
+    base_url = "";
 }
 
 
@@ -80,6 +80,7 @@ export const fetchAllUsers = async (): Promise<IUser[]> => {
 
 export const register = async (user: formUser): Promise<IUser> => {
     const url: string = base_url+"/user";
+    console.log(url)
 
     const response = await fetch(url, {
         method: "POST",
