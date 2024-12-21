@@ -4,15 +4,14 @@
 
 import {CardFull} from "./containers/CardFull.tsx";
 import {CardRow} from "./containers/CardRow.tsx";
-import {fetchCard} from "../../api/cardService.ts";
+import {fetchCard, fetchWIPCard} from "../../api/cardService.ts";
 import {useEffect, useState} from "react";
 import ICard from "../../types/ICard.ts";
-import { fetchWIPCard } from "../../api/wipCardService.ts";
+import { fetchWIPCards } from "../../api/wipCardService.ts";
 
 enum CardDisplay {
     FULL = "full",
     ROW = "row",
-    TABLE = "table"
 }
 
 interface IProps {
@@ -30,7 +29,6 @@ interface IProps {
  */
 export const Card=(props:IProps) => {
     const [card, setCard] = useState<any | null>(null);
-    const [cards, setCards] = useState<ICard[] | null>(null);
 
     useEffect(() => {
         const loadCard = async (): Promise<void> => {
@@ -51,7 +49,7 @@ export const Card=(props:IProps) => {
     }, [props.cardId]);
 
     if (props.cardId === -1){
-        return; (
+        return (
             <div></div>
         )
     }

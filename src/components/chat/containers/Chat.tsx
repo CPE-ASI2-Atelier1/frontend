@@ -53,7 +53,12 @@ export const Chat = (props:IProps) => {
             console.log(`Notification: The user ${data.receiverId} is not online.`);
         });
 
-        console.log("in useEffect")
+
+        // Effacer les messages reçus et envoyés lorsque le destinataire change
+        if (receiverId) {
+            setReceivedMessages([]);
+            setSentMessages([]);
+        }
     
         // Retourne une fonction de nettoyage qui déconnecte le socket
         return () => {
@@ -61,14 +66,8 @@ export const Chat = (props:IProps) => {
             socket.off('USER_NOT_CONNECTED');
             socket.off('UPDATE_CONNECTED_USERS')
         };
-    }, [socket]);
 
-
-    useEffect(() => {
-        // Effacer les messages reçus et envoyés lorsque le destinataire change
-        setReceivedMessages([]);
-        setSentMessages([]);
-    }, [receiverId]);
+    }, [socket,receiverId]);
 
     return (
 
