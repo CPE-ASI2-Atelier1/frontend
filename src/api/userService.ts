@@ -88,7 +88,7 @@ export const register = async (user: formUser): Promise<IUser> => {
             "Content-Type": "application/json",
         },
         credentials: 'include',
-        body: JSON.stringify(user),
+        body: JSON.stringify({...user, account: 100}),
     });
 
     if (!response.ok) {

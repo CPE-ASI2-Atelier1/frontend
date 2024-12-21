@@ -11,7 +11,14 @@ import { RootState } from '../store';
 import { io, Socket } from 'socket.io-client';
 import IUser from '../types/IUser';
 
-const SOCKET_SERVER_URL = `${import.meta.env.VITE_SOCKET_URL}`
+let SOCKET_SERVER_URL: string;
+const dev: string = `${import.meta.env.VITE_ENV}`
+if (dev === "DEV") {
+    SOCKET_SERVER_URL = `${import.meta.env.VITE_SOCKET_URL}`
+} else {
+    SOCKET_SERVER_URL = ""
+}
+// const SOCKET_SERVER_URL = `${import.meta.env.VITE_SOCKET_URL}`
 
 export const Game: React.FC = () => {
     const user = useSelector((state:RootState) => state.user.user); // Sélectionne l'id de l'utilisateur dans le store

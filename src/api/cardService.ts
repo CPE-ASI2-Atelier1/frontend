@@ -44,15 +44,6 @@ export const addCard = async (card: ICard): Promise<ICard> => {
     return await response.json();
 }
 
-export const fetchWIPCard = async (cardId: number) : Promise<ICard> => {
-    // A changer : env, et envoyer au proxy.....
-    const response = await fetch(`http://localhost:8081/WipCard/${cardId}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch WIP card : ${response.statusText}`);
-    }
-    return await response.json();
-}
-
 export const generateProperties = async (card:ICard): Promise<number> => {
     const config = {
         method: "POST",
