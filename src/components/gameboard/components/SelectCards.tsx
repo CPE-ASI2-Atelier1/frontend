@@ -1,10 +1,12 @@
 import { useState } from "react";
 import ICard from "../../../types/ICard";
 import { Card } from "../../Card/Card";
+import { CardTable } from "../../CardDisplay/containers/CardTable";
+import "./SelectCards.css";
 
 interface IProps {
-    cards: number[];
-    setSelectedCards: (cards: number[]) => void;
+    cardIds: number[];
+    cardsAreSelected: (cards: number[]) => void;
 }
 
 export const SelectCards = (props:IProps) => {
@@ -20,7 +22,7 @@ export const SelectCards = (props:IProps) => {
 
     const confirmed = () => {
         if (localSelectedCards.length > 0 && localSelectedCards.length <= 4) {
-            props.setSelectedCards(localSelectedCards); // Envoie les cartes sélectionnées à GameBoard
+            props.cardsAreSelected(localSelectedCards); // Envoie les cartes sélectionnées à GameBoard
         } else {
             alert("Please select between 1 and 4 cards.");
         }
@@ -29,19 +31,27 @@ export const SelectCards = (props:IProps) => {
     return (
         <div className="select-cards-container">
             <h2>Select Your Cards</h2>
-            <div className="cards-grid">
-                {props.cards.map((cardId) => (
-                    <div
-                        key={cardId}
-                        className={`card-item ${localSelectedCards.includes(cardId) ? "selected" : ""}`}
-                        onClick={() => toggleCardSelection(cardId)}
-                    >
-                        <Card key={cardId} display={'full'} cardId={cardId} isWIP={false} />
-                    </div>
-                ))}
-            </div>
-            <button onClick={confirmed} className="next-button">
-                Next Step
+            {/* <div
+                className="card-table-wrapper"
+                onClick={(e) => {
+                    const target = e.target as HTMLElement;
+                    const cardId = target.dataset.cardId ? parseInt(target.dataset.cardId, 10) : null;
+                    if (cardId !== null) toggleCardSelection(cardId);
+                }}
+            >
+                <CardTable cardIds={props.cardIds} />
+            </div> */}
+            <CardTable
+                cardIds={props.cardIds}
+                toggleSelection={toggleCardSelection}
+                selectedCards={localSelectedCards}
+            />
+            <button
+                onClick={confirmed}
+                className={`next-button ${localSelectedCards.length > 0 ? "active" : ""}`}
+                disabled={localSelectedCards.length === 0}
+            >
+                Confirm you cards
             </button>
         </div>
     );

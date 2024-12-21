@@ -5,11 +5,23 @@ import './GameBoard.css';
 import { GAME_ACTIONS } from '../../constants/gameActions.ts';
 import { SelectCards } from "./components/SelectCards.tsx";
 import { Socket } from "socket.io-client";
+import { fetchCard } from "../../api/cardService.ts";
 import ICard from "../../types/ICard.ts";
+import { fetchUserById } from "../../api/userService.ts";
 
 interface IProps{
     user: IUser;
     socket:Socket;
+}
+interface PendingAction {
+    cardId: number;
+    targetId: number;
+    energyCost: number;
+}
+interface DamageLog {
+    cardId: number;
+    targetId: number;
+    damage: number;
 }
 
 export const GameBoard = (props:IProps) => {
@@ -19,30 +31,57 @@ export const GameBoard = (props:IProps) => {
     const user: IUser = props.user;
     // const gameState = useSelector((state: RootState) => state.gameState); // Sélection de l'état global du plateau
     const [gameState, setGameState] = useState(0);
-    //changer le gamestate dans un store pour eviter que quand on par et revient ça part
-    const [selectedCards, setSelectedCards] = useState<number[]>([]);
+    const [isMyTurn, setIsMyTurn] = useState(false);
+    const [energy, setEnergy] = useState<number>(100);
+    // Game logs and pending actions
+    const [log, setLog] = useState<string[]>([]); // Journal des actions
+    const [damageLog, setDamageLog] = useState<DamageLog[]>([]); // Historique des dégâts
+    const [pendingAction, setPendingAction] = useState<PendingAction | null>(null); // Action en attente
+    // TODO : Réféchir au store pour le gamestatre
+    const [selectedCards, setSelectedCards] = useState<ICard[]>([]);
+    const [enemyCards, setEnemyCards] = useState<ICard[]>([]);
 
-    // useEffect(() => {
-    //     // Mise à jour de l'état général du plateau à 1 (jeu en cours)
-    //     dispatch({ type: 'UPDATE_GAME_STATE', payload: 1 });
-
-    //     // Cleanup: remettre à 0 lorsqu'on quitte le composant
-    //     return () => {
-    //         dispatch({ type: 'UPDATE_GAME_STATE', payload: 0 });
-    //     };
-    // }, [dispatch]);
+    const [enemy, setEnemy] = useState<IUser>();
 
     useEffect(() => {
         if (!socket) return;
 
         // Écoute des événements uniquement de type GAME_ACTIONS
-        socket.on(GAME_ACTIONS.GAME_STARTS, (data) => {
-            console.log('🎮 Game has started!', data);
-            setGameState(3); // Indique que la partie a commencé
+        socket.on(GAME_ACTIONS.GAME_STARTS, (enemyC) => {
+            console.log('🎮 Game has started!', enemyC);
+            // TODO enlever les 2, enemyId sera le seul envoyé
+            handleGameStart(enemyC.cardsIds, setEnemyCards, setGameState);
         });
 
         socket.on(GAME_ACTIONS.START_TURN, () => {
             console.log('🔄 Your turn to play!');
+            setIsMyTurn(true);
+        });
+
+        // Écoute pour ACTION_SUCCESS
+        socket.on(GAME_ACTIONS.ACTION_SUCCESS, (data) => {
+            const { cardId, targetId, damage } = data;
+
+            // Si l'action réussit, réduire l'énergie
+            if (pendingAction && pendingAction.cardId === cardId) {
+                setEnergy((prevEnergy) => prevEnergy - pendingAction.energyCost);
+                setPendingAction(null); // Réinitialiser l'action en attente
+            }
+
+            setLog((prevLog) => [...prevLog, `Action successful: Card ${cardId} attacked Target ${targetId} for ${damage} damage.`]);
+            setDamageLog((prevLog) => [...prevLog, { cardId, targetId, damage }]);
+        });
+
+        // Écoute pour ACTION_FAILED
+        socket.on(GAME_ACTIONS.ACTION_FAILED, (data) => {
+            const { message, code } = data;
+
+            // Si l'action échoue, ne pas réduire l'énergie
+            if (pendingAction) {
+                setPendingAction(null); // Réinitialiser l'action en attente
+            }
+
+            setLog((prevLog) => [...prevLog, `Action failed: ${message} (Error code: ${code})`]);
         });
 
         socket.on(GAME_ACTIONS.END_TURN, () => {
@@ -51,6 +90,11 @@ export const GameBoard = (props:IProps) => {
 
         socket.on(GAME_ACTIONS.CARD_SELECTION, (data) => {
             console.log('🃏 Select your cards!', data);
+            if(data.userId)
+                {handleEnemyUser(data.userId);}
+            else{
+                handleEnemyUser(data.enemyId);
+            }
             setGameState(2);
         });
 
@@ -66,6 +110,8 @@ export const GameBoard = (props:IProps) => {
             socket.off(GAME_ACTIONS.END_TURN);
             socket.off(GAME_ACTIONS.CARD_SELECTION);
             socket.off(GAME_ACTIONS.GAME_OVER);
+            socket.off(GAME_ACTIONS.ACTION_SUCCESS);
+            socket.off(GAME_ACTIONS.ACTION_FAILED);
         };
     }, [socket]);
     
@@ -85,14 +131,28 @@ export const GameBoard = (props:IProps) => {
     }
 
     // TODO : faire cette fonction pour qu'elle envoie fin du tour au serveur 
-    const endTurn = () => {
-        console.log("fin du tour");
-    }
+    const handleGameStart = async (enemyC: number[], setEnemyCards: (cards: any[]) => void, setGameState: (state: number) => void) => {
+        try {
+            console.log(enemyC)
+            const cardList = await fetchCards(enemyC);
+            console.log(cardList);
+            setEnemyCards(cardList);
+            setGameState(4);
+        } catch (error) {
+            console.error("Error fetching enemy cards:", error);
+            setGameState(-1);
+        }
+    };
 
-    const next = (selectedCards : ICard[]) => {
-        // Send selected cards to server
-        socket.emit("WAITING_CARDS", { id: Number(user.id), cards: selectedCards });
-        console.log(`User ${user.id} selected cards:`, selectedCards);
+    const handleEnemyUser = async (enemyId:  number) => {
+        console.log("enemyId", enemyId);
+        try {
+            const enemy = await fetchUserById(enemyId);
+            setEnemy(enemy);
+        } catch (error) {
+            console.error("Error setting enemy user:", error);
+            setGameState(-1);
+        }
     }
 
     const startGame = () => {
@@ -102,10 +162,75 @@ export const GameBoard = (props:IProps) => {
         setGameState(1);
     }
 
-    const cardsSelection = (cards: number[]) => {
+    const fetchCards = async (cards: number[]) => {
+        let cardList = [];
+        for (let i = 0; i < cards.length; i++) {
+            const card = await fetchCard(cards[i]);
+            cardList.push(card);
+        }
+
+        return cardList;
+    }
+
+    const cardsSelection = async (cards: number[]) => {
         console.log(cards);
-        setSelectedCards(cards);
-        setGameState(3);
+        try {
+            // Attendez la réponse de fetchCards avant de procéder
+            const cardList = await fetchCards(cards);
+            console.log(cardList);
+            setSelectedCards(cardList);
+
+            // Créez cards2 à partir de cardList après l'appel asynchrone
+            const cards2 = cardList.map(({ id, attack, defence, energy, name, hp }) => ({
+                id,
+                attack,
+                defence,
+                energy,
+                name,
+                hp,
+            }));
+
+            console.log(cards2);
+
+            // Émettez l'événement une fois que tout est prêt
+            socket.emit("WAITING_CARDS", { id: Number(user.id), cards: cards2 });
+
+            // Mettez à jour l'état du jeu
+            setGameState(3);
+        } catch (error) {
+            console.error("Error fetching cards or updating state:", error);
+            setGameState(-1);
+        }
+    }
+
+    const attack = (cardId:number, targetId:number) => {
+        const energyCost = 20; // Exemple de coût d'énergie fixe pour une attaque
+
+        // Vérifiez si c'est le tour de l'utilisateur
+        if (!isMyTurn) {
+            alert("It's not your turn!");
+            return;
+        }
+
+        // Émettre l'action via le socket
+        socket.emit("SEND_ACTION", {
+            userId: user.id,
+            cardId,
+            targetId,
+        });
+
+        // Marquez l'action comme en attente
+        setPendingAction({ cardId, targetId, energyCost });
+    };
+
+    const endTurn = () =>{
+        if (!isMyTurn) {
+            alert("You can't end your turn now!");
+            return;
+        }
+
+        socket.emit("END_TURN", { id: Number(user.id) });
+        setIsMyTurn(false);
     }
 
     if (!user) {
@@ -134,7 +259,7 @@ export const GameBoard = (props:IProps) => {
     if (gameState === 2) {
         return (
                 <div>
-                    <SelectCards cards={user.cardList} setSelectedCards={cardsSelection}/>
+                    <SelectCards cardIds={user.cardList} cardsAreSelected={cardsSelection}/>
                 </div>
         )
     }
@@ -148,17 +273,40 @@ export const GameBoard = (props:IProps) => {
             </div>
         )
     }
-    return (
+    if (gameState === 4 && enemy) {
+        return (
         <div className="gameboard-container">
             <div className="row">
-                <Board user={userExample} />
+                <Board user={enemy} cards={enemyCards} energy={energy}/>
             </div> 
             <div className="end-turn-container">
                 <button onClick={endTurn}>End Turn</button>
+                <span className="turn-indicator">
+                    {isMyTurn ? "Your turn" : "Opponent's turn"}
+                </span>
+                <button onClick={() => attack(6, 1)}>
+                    Attack
+                </button>
+                <div className="log-container">
+                    <h3>Action Log</h3>
+                    <ul>
+                        {log.map((entry, index) => (
+                            <li key={index}>{entry}</li>
+                        ))}
+                    </ul>
+                </div>
+
             </div>
             <div className="row">
-                <Board user={user} />
+                <Board user={user} cards={selectedCards} energy={energy}/>
             </div>
         </div>
-    )
+    )}
+    return (
+        <div>
+            Problem with the gameboard state pls refresh
+        </div>
+    );
+
+
 }

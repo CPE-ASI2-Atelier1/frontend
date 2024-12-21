@@ -1,0 +1,47 @@
+.card-column {
+    display: flex;
+    flex-wrap: wrap; /* Les cartes passent à la ligne si nécessaire */
+    gap: 20px; /* Espacement entre les cartes */
+    justify-content: center; /* Centre les cartes horizontalement */
+    align-items: flex-start; /* Aligne les cartes en haut */
+    padding: 20px;
+    background-color: #f9f9f9; /* Couleur de fond */
+    border-radius: 8px;
+    width: 100%; /* Prend toute la largeur disponible */
+    max-width: 1200px; /* Largeur maximale */
+    margin: 0 auto; /* Centrage horizontal */
+}
+
+.card-column-item {
+    flex: 0 1 calc(25% - 20px); /* Par défaut, 4 cartes par ligne */
+    max-width: calc(25% - 20px); /* Limite la largeur maximale */
+    min-width: 200px; /* Taille minimale des cartes */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Contenu empilé verticalement */
+    justify-content: space-between;
+    align-items: center;
+    aspect-ratio: 3 / 4; /* Maintient la proportion de la carte */
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.card-column-item.selected {
+    background-color: #d1e7dd; /* Fond vert clair pour la sélection */
+    border-color: #0f5132; /* Bordure verte foncée */
+}
+
+.card-column-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover; /* Garde les proportions de l'image */
+}
+
+.card-column-item:hover {
+    transform: scale(1.05); /* Effet de survol */
+    background-color: #f1f1f1; /* Légère surbrillance au survol */
+}

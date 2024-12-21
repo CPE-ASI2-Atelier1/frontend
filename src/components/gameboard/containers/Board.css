@@ -5,12 +5,34 @@ body {
 .board-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 80%; /* S'assure que le chat utilise 80% de l'espace parent */
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    width: 90%; /* Prend 90% de la largeur parent */
+    max-width: 1900px; /* Largeur maximale */
+    margin: 0 auto; /* Centre horizontalement */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff; /* Fond blanc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.progress {
---progress: 0%;
+.board-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.cards-wrapper {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap; /* Les cartes peuvent aller à la ligne */
+    gap: 20px; /* Espacement entre les cartes */
+    justify-content: center; /* Centrer les cartes dans le conteneur */
+}
+
+.energy {
+--energy: 0%;
 
 width: 40px;
 height: 40px;
@@ -24,8 +46,8 @@ cursor: pointer;
 overflow: hidden;
 }
 
-.progress .bar {
-width: var(--progress);
+.energy .bar {
+width: var(--energy);
 height: 100%;
 background: linear-gradient(gold, #c85, gold);
 background-repeat: repeat;
@@ -36,7 +58,7 @@ animation:
 transition: width 3s ease;
 }
 
-@property --progress {
+@property --energy {
 syntax: "<length>";
 initial-value: 0%;
 inherits: true;
