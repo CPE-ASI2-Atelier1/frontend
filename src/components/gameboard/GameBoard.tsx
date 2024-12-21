@@ -1,6 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { RootState } from "../../store.ts";
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
 import IUser from "../../types/IUser.ts";
 import {Board} from "./containers/Board.tsx";
 import './GameBoard.css';
@@ -18,12 +16,11 @@ export const GameBoard = (props:IProps) => {
 
     // const dispatch = useDispatch();
     const socket = props.socket;
+    const user: IUser = props.user;
     // const gameState = useSelector((state: RootState) => state.gameState); // Sélection de l'état global du plateau
     const [gameState, setGameState] = useState(0);
     //changer le gamestate dans un store pour eviter que quand on par et revient ça part
     const [selectedCards, setSelectedCards] = useState<number[]>([]);
-
-    const user = props.user;
 
     // useEffect(() => {
     //     // Mise à jour de l'état général du plateau à 1 (jeu en cours)

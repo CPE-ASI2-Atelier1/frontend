@@ -30,7 +30,7 @@ interface IProps {
  */
 export const Card=(props:IProps) => {
     const [card, setCard] = useState<any | null>(null);
-    const [cards, setCards] = useState<ICard[] | null>(null);
+    // const [cards, setCards] = useState<ICard[] | null>(null);
 
     useEffect(() => {
         const loadCard = async (): Promise<void> => {
@@ -43,7 +43,7 @@ export const Card=(props:IProps) => {
                     const fetchedCard: ICard = await fetchCard(props.cardId);
                     setCard(fetchedCard);
                 }
-            } catch (err: any) {
+            } catch (err) {
                 console.log(err);
             }
         };
@@ -51,7 +51,7 @@ export const Card=(props:IProps) => {
     }, [props.cardId]);
 
     if (props.cardId === -1){
-        return; (
+        return (
             <div></div>
         )
     }

@@ -1,7 +1,13 @@
 import IUser from "../types/IUser";
 import { formUser } from "../pages/Signup"
 
-const base_url: string= `${import.meta.env.VITE_MONOLITH_URL}`
+let base_url: string;
+const dev: string = `${import.meta.env.VITE_ENV}`
+if (dev === "DEV") {
+    base_url = `${import.meta.env.VITE_MONOLITH_URL}`
+} else {
+    base_url = `${import.meta.env.VITE_PROXY_URL}`
+}
 
 
 /**

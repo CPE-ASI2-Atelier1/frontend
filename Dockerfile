@@ -1,6 +1,5 @@
 # ------------------ BUILD -----------------------
 FROM node:18-alpine3.17 as build
-
 WORKDIR /app
 
 COPY package.json .
@@ -10,18 +9,19 @@ COPY vite.config.ts .
 COPY index.html .
 COPY src ./src
 
+#RUN npm install
+#RUN npm run build TODO : add ts compilation : npx tsc -b
 RUN npm install
-RUN npm run build
+RUN npx vite build
 
-# ------------------ LAUNCH ----------------------
-FROM node:18-alpine3.17
+# ------------------ PROXY ----------------------
+FROM nginx:stable-alpine
 
-WORKDIR /app
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf.template /etc/nginx/nginx.conf.template
 
-COPY --from=build /app/dist ./dist
-COPY package.json .
-COPY package-lock.json .
-
-RUN npm install --production
-
-CMD ["node", "dist/index.js"]
+RUN apk add --no-cache gettext
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+EXPOSE 80
+CMD ["/docker-entrypoint.sh"]

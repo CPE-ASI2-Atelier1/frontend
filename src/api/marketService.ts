@@ -9,7 +9,13 @@ import ICard from "../types/ICard.ts"
  * @return Promise A promise for the response as a list of ICard objects
  */
 
-const base_url: string = `${import.meta.env.VITE_MONOLITH_URL}`
+let base_url: string;
+const dev: string = `${import.meta.env.VITE_ENV}`
+if (dev === "DEV") {
+    base_url = `${import.meta.env.VITE_MONOLITH_URL}`
+} else {
+    base_url = `${import.meta.env.VITE_PROXY_URL}`
+}
 
 export const fetchCards = async () : Promise<ICard[]> => {
     const response = await fetch(`${base_url}/cards`);
