@@ -44,7 +44,7 @@
 
 /* Conteneur de la carte principale */
 .selected-card-container {
-    flex: 2; /* Prend 2 fois l'espace du tableau */
+    flex: 1; /* Prend 2 fois l'espace du tableau */
     background-color: #fff;
     border-radius: 12px;
     padding: 20px;
@@ -55,7 +55,6 @@
     justify-content: flex-start;
     gap: 20px;
     max-height: 80vh;
-    overflow-y: auto;
 }
 
 /* Message "aucune sélection" */

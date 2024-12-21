@@ -1,4 +1,4 @@
-//import "./Messages.css";
+import "./Messages.css";
 import IMessage from "../../../types/IMessage";
 
 interface IProps {

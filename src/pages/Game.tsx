@@ -4,19 +4,19 @@
 
 import React, { useEffect, useState } from 'react';
 import { Chat } from '../components/chat/containers/Chat';
-import './Game.module.css';
 import { GameBoard } from '../components/gameboard/GameBoard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { io, Socket } from 'socket.io-client';
 import IUser from '../types/IUser';
+import styles from './Game.module.css';
 
 const SOCKET_SERVER_URL = 'http://localhost:3000';
 // TODO utiliser .env
 
 
 export const Game: React.FC = () => {
-    const user = useSelector((state:RootState) => state.user.user); // Sélectionne l'id de l'utilisateur dans le store
+    const user = useSelector((state:RootState) => state.user.submitted_user); // Sélectionne l'id de l'utilisateur dans le store
     const [users, setUsers] = useState<IUser[]>([]); // Liste des utilisateurs
     const [socket, setSocket] = useState<Socket>();
 
@@ -72,11 +72,11 @@ export const Game: React.FC = () => {
 
     if(socket){
     return (
-        <div className="game-board-container">
-            <div className="chat-section">
+        <div className={styles.gameboardcontainer}>
+            <div className={styles.chatsection}>
                 <Chat user={user} socket={socket}/>
             </div>
-            <div className="game-section">
+            <div className={styles.gamesection}>
                 <GameBoard user={user} socket={socket}/>
             </div>
         </div>

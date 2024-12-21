@@ -60,12 +60,6 @@ h1 {
   margin-bottom: 20px;
 }
 
-p {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  margin: 20px 0;
-}
-
 button {
   background-color: var(--accent-color);
   color: var(--secondary-color);

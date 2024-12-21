@@ -9,7 +9,6 @@
     border: 1px solid rgba(255, 255, 255, 0.3); /* Bordure subtile */
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Ombre douce */
-    width: 100%; /* S'étend à la largeur parent */
     max-width: 500px; /* Largeur maximale */
     margin: 20px auto; /* Centré avec un espacement */
     text-align: center; /* Centre le texte */

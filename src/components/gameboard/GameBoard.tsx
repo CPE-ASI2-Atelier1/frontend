@@ -305,7 +305,7 @@ export const GameBoard = (props:IProps) => {
         </div>
     )}
     return (
-        <div>
+        <div className="error-message">
             Problem with the gameboard state pls refresh
         </div>
     );
