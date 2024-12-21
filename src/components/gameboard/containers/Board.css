@@ -31,8 +31,8 @@ body {
     justify-content: center; /* Centrer les cartes dans le conteneur */
 }
 
-.progress {
---progress: 0%;
+.energy {
+--energy: 0%;
 
 width: 40px;
 height: 40px;
@@ -46,8 +46,8 @@ cursor: pointer;
 overflow: hidden;
 }
 
-.progress .bar {
-width: var(--progress);
+.energy .bar {
+width: var(--energy);
 height: 100%;
 background: linear-gradient(gold, #c85, gold);
 background-repeat: repeat;
@@ -58,7 +58,7 @@ animation:
 transition: width 3s ease;
 }
 
-@property --progress {
+@property --energy {
 syntax: "<length>";
 initial-value: 0%;
 inherits: true;
