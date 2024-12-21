@@ -6,6 +6,7 @@ interface IProps {
     senderId: number; // Id de l'utilisateur connecté
     receiverId: number | null; // Id de l'utilisateur cible
     setSentMessages: React.Dispatch<React.SetStateAction<string[]>>; // Fonction pour mettre à jour les messages envoyés
+
 }
 
 //const SOCKET_SERVER_URL = 'http://localhost:3000'; // Remplace par l'URL de ton serveur
@@ -33,6 +34,20 @@ export const InputChat =(props: IProps)=> {
             setMsg('');
         }
     };
+
+    if (!props.receiverId) {
+        return (
+            <div className="chat-input-container">
+                <input 
+                    type="text" 
+                    placeholder="Choisissez un destinataire..." 
+                    value={Msg} 
+                    readOnly
+                />
+                <button onClick={handleSendMessage2}>Envoyer</button>
+            </div>
+        )
+    }
 
     return (
         <div className="chat-input-container">

@@ -1,0 +1,20 @@
+/*TODO faire une class css sur la page globale*/
+
+.gameboard-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 80%; /* S'assure que le chat utilise 80% de l'espace parent */
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0; /* Un peu de marge verticale */
+    padding: 10px;
+}
+
+.end-turn-container {
+    margin: 20px 3px; /* Marge verticale autour du bouton */
+}

@@ -1,0 +1,53 @@
+body {
+    background: black;
+}
+
+.board-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 80%; /* S'assure que le chat utilise 80% de l'espace parent */
+}
+
+.progress {
+--progress: 0%;
+
+width: 40px;
+height: 40px;
+margin: 1em 0;
+border-radius: 5px;
+border: 1px solid #fff;
+/* padding: 3px 3px; */
+box-shadow: 0 0 5px #aaa;
+position: relative;
+cursor: pointer;
+overflow: hidden;
+}
+
+.progress .bar {
+width: var(--progress);
+height: 100%;
+background: linear-gradient(gold, #c85, gold);
+background-repeat: repeat;
+box-shadow: 0 0 10px 0px orange;
+animation: 
+    shine 4s ease-in infinite,
+    end 1s ease-out 1;
+transition: width 3s ease;
+}
+
+@property --progress {
+syntax: "<length>";
+initial-value: 0%;
+inherits: true;
+}
+
+@keyframes shine {
+0% { background-position: 0 0; }
+100% { background-position: 0 50px; }
+}
+
+@keyframes end {
+0%, 100% { box-shadow: 0 0 10px 0px orange; }
+50% { box-shadow: 0 0 15px 5px orange; }
+}

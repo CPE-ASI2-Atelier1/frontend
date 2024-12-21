@@ -12,6 +12,7 @@ import { fetchWIPCards } from "../../api/wipCardService.ts";
 enum CardDisplay {
     FULL = "full",
     ROW = "row",
+    TABLE = "table"
 }
 
 interface IProps {
@@ -29,6 +30,7 @@ interface IProps {
  */
 export const Card=(props:IProps) => {
     const [card, setCard] = useState<any | null>(null);
+    const [cards, setCards] = useState<ICard[] | null>(null);
 
     useEffect(() => {
         const loadCard = async (): Promise<void> => {

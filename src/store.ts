@@ -8,13 +8,16 @@ import userReducer from './slices/userSlice';
 import authReducer from './slices/authSlice';
 import cardReducer from './slices/cardSlice';
 import cardCreationReducer from './slices/cardCreationSlice';
+import gameReducer from './slices/gameStateSlice';
+
 
 export const store = configureStore({
   reducer: {
     user : userReducer,
     auth: authReducer,
     cardReducer: cardReducer,
-    cardCreationReducer: cardCreationReducer
+    cardCreationReducer: cardCreationReducer,
+    gameState: gameReducer
   },
 });
 
