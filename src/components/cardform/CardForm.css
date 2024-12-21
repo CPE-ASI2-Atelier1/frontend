@@ -11,6 +11,18 @@
     box-sizing: border-box;
 }
 
+.card-h1 {
+    font-size: 2rem; /* Taille légèrement plus grande pour le titre principal */
+    font-weight: 700; /* Titre bien marqué */
+    text-align: center; /* Centré horizontalement */
+    color: rgba(0, 0, 0, 0.8); /* Texte légèrement adouci */
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Ombre subtile pour un effet 3D élégant */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0)); /* Effet lumineux sur le texte */
+    margin: 0px 0; /* Espacement au-dessus et en dessous */
+    padding: 0px; /* Espacement interne pour mise en valeur */
+    backdrop-filter: blur(10px); /* Effet de flou pour un style élégant */
+}
+
 /* Formulaire */
 .card-form {
     flex: 3; /* Plus large que la carte */

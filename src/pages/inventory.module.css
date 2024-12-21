@@ -24,14 +24,6 @@
     gap: 15px;
 }
 
-/* Message "aucune carte" */
-.no-cards-message {
-    font-size: 1rem;
-    color: #6e6e73;
-    text-align: center;
-    margin: auto;
-}
-
 /* Une carte dans le tableau (mode "row") */
 .card-table .card {
     display: flex;
@@ -103,6 +95,14 @@
 .edit-button:hover {
     background-color: #005bb5;
     transform: scale(1.05);
+}
+
+/* Message "aucune carte" */
+.no-cards-message {
+    font-size: 1rem;
+    color: #6e6e73;
+    text-align: center;
+    margin: auto;
 }
 
 /* Scrolling doux */

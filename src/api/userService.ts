@@ -1,7 +1,8 @@
 import IUser from "../types/IUser";
 import { formUser } from "../pages/Signup"
 
-const base_url: string= `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`
+const base_url: string= `${import.meta.env.VITE_MONOLITH_URL}`
+
 
 /**
  * Méthode pour authentifier un utilisateur via le backend

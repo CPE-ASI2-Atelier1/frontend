@@ -73,7 +73,7 @@ export const Chat = (props:IProps) => {
     return (
 
         <div className="chat-container">
-            <h2>Chat</h2>
+            <h1 className="card-h1">Chat</h1>
             <SelectReceiver users={users} receiverId={receiverId} setReceiverId={setReceiverId} />
             <Messages receivedMessages={receivedMessages} sentMessages={sentMessages} userId={user.id} />
 

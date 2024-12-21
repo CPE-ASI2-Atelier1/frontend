@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Socket } from 'socket.io-client'; // Import de socket.io-client
+import './InputChat.css';
 
 interface IProps {
     socket: Socket; // On passe le socket en prop pour pouvoir l'utiliser
@@ -53,12 +54,12 @@ export const InputChat =(props: IProps)=> {
         <div className="chat-input-container">
             <input 
                 type="text" 
-                placeholder="Écrivez un message..." 
+                placeholder="Write a message..." 
                 value={Msg} 
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMsg(e.target.value)} 
                 onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleSendMessage2()}
             />
-            <button onClick={handleSendMessage2}>Envoyer</button>
+            <button onClick={handleSendMessage2}>Send</button>
         </div>
         
     )

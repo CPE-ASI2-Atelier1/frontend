@@ -4,7 +4,8 @@
 
 import ICard from "../types/ICard.ts"
 
-const url: string= `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`
+//const url: string= `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`
+const url: string = `${import.meta.env.VITE_MONOLITH_URL}`
 
 /**
  * Method to fetch a card from the backend

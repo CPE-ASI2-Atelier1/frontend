@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Chat } from '../components/chat/containers/Chat';
-import './Game.css';
+import './Game.module.css';
 import { GameBoard } from '../components/gameboard/GameBoard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';

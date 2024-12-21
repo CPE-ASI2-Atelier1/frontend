@@ -10,6 +10,7 @@ import { update_user_action, submit_user_action } from "../slices/userSlice";
 import { NavLink, useNavigate } from "react-router-dom";
 import IUser from "../types/IUser";
 import styles from "./login.module.css";
+import Cookies from 'js-cookie';
 
 export const Login = () => {
     const [username, setUsername] = useState("");
@@ -30,6 +31,11 @@ export const Login = () => {
             // Deuxième requête : Récupération des informations utilisateur
             const user: IUser = await fetchUserById(userId);
             console.log("Données utilisateur récupérées :", user);
+
+            // Mise de l'id du user dans les cookies en tant que token
+            // À terme le token sera généré par le serveur pour l'aspect sécuritaire
+            Cookies.set('user', JSON.stringify(user.id), { expires: 7, path: '/' }); 
+            //window.location.reload(); // pas trouvé mieux pour le moment pour retourner dans App.tsx
 
             // Mise à jour du store Redux avec l'utilisateur
             dispatch(update_user_action({ user }));
