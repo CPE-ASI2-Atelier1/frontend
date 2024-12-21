@@ -4,7 +4,13 @@
 
 import ICard from "../types/ICard.ts"
 
-const base_url: string= `${import.meta.env.VITE_SCHEDULER_URL}`
+let base_url: string;
+const dev: string = `${import.meta.env.VITE_ENV}`
+if (dev === "DEV") {
+    base_url = `${import.meta.env.VITE_SCHEDULER_URL}`
+} else {
+    base_url = ""
+}
 
 export const fetchWIPCards = async (userId: number) : Promise<ICard[]> => {
     // A changer : env, et envoyer au proxy.....

@@ -1,0 +1,65 @@
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    resolver 127.0.0.11 valid=10s; # Utilise le DNS interne de Docker
+
+    server {
+        listen 8080;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # Fichiers statiques
+        location / {
+            try_files $uri /index.html;
+        }
+
+        location /user {
+            proxy_pass ${VITE_MONOLITH_URL};
+        }
+
+        location /auth {
+            proxy_pass ${VITE_MONOLITH_URL};
+        }
+
+        location /card {
+            proxy_pass ${VITE_MONOLITH_URL};
+        }
+
+        location /store {
+            proxy_pass ${VITE_MONOLITH_URL};
+        }
+
+        location /wipCards {
+            proxy_pass ${VITE_SCHEDULER_URL};
+        }
+
+        location /WipCard {
+            proxy_pass ${VITE_SCHEDULER_URL};
+        }
+
+        location /deleteWIP {
+            proxy_pass ${VITE_SCHEDULER_URL};
+        }
+
+        location /Props {
+            proxy_pass ${VITE_SCHEDULER_URL};
+        }
+
+
+        # Proxy pour la socket
+        location /socket.io {
+            proxy_pass ${VITE_SOCKET_URL};
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
+    }
+}

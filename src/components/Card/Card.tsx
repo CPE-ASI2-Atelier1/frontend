@@ -4,10 +4,10 @@
 
 import {CardFull} from "./containers/CardFull.tsx";
 import {CardRow} from "./containers/CardRow.tsx";
-import {fetchCard, fetchWIPCard} from "../../api/cardService.ts";
+import {fetchCard} from "../../api/cardService.ts";
 import {useEffect, useState} from "react";
 import ICard from "../../types/ICard.ts";
-import { fetchWIPCards } from "../../api/wipCardService.ts";
+import { fetchWIPCard } from "../../api/wipCardService.ts";
 
 enum CardDisplay {
     FULL = "full",
@@ -41,7 +41,7 @@ export const Card=(props:IProps) => {
                     const fetchedCard: ICard = await fetchCard(props.cardId);
                     setCard(fetchedCard);
                 }
-            } catch (err: any) {
+            } catch (err) {
                 console.log(err);
             }
         };
