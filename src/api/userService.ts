@@ -72,6 +72,9 @@ export const fetchAllUsers = async (): Promise<IUser[]> => {
     }
 };
 
+export const updateBalanceUser = async (userId: number, award: number) => {
+};
+
 export const register = async (user: formUser): Promise<IUser> => {
     const url: string = base_url+"/user";
 

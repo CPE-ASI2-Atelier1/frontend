@@ -8,7 +8,7 @@ import { SelectCards } from "./components/SelectCards.tsx";
 import { Socket } from "socket.io-client";
 import { fetchCard } from "../../api/cardService.ts";
 import ICard from "../../types/ICard.ts";
-import { fetchUserById } from "../../api/userService.ts";
+import { fetchUserById, updateBalanceUser } from "../../api/userService.ts";
 
 
 interface IProps{
@@ -33,8 +33,9 @@ export const GameBoard = (props:IProps) => {
     // const gameState = useSelector((state: RootState) => state.gameState); // Sélection de l'état global du plateau
     // TODO : Réféchir au store pour le gamestatre
     const [gameState, setGameState] = useState(0);
+    //TODO : si game over que d'un coté reset pas forcement tous de l'autre faire gaffe 
     const [isMyTurn, setIsMyTurn] = useState(false);
-    const [energy, setEnergy] = useState<number>(100);
+    const [energy, setEnergy] = useState<number>(50);
     // Game logs and pending actions
     const [log, setLog] = useState<string[]>([]); // Journal des actions
     // Utilisation de useRef pour l'action en attente pour avoir l'info directement
@@ -67,6 +68,7 @@ export const GameBoard = (props:IProps) => {
 
         socket.on(GAME_ACTIONS.START_TURN, () => {
             console.log('🔄 Your turn to play!');
+            setEnergy((prevEnergy) => prevEnergy + 50);
             setIsMyTurn(true);
         });
 
@@ -96,9 +98,15 @@ export const GameBoard = (props:IProps) => {
             setLog((prevLog) => [...prevLog, `Action failed: ${message} (Error code: ${code})`]);
         });
 
-        socket.on(GAME_ACTIONS.END_TURN, () => {
-            console.log('⏳ Waiting for opponent\'s turn...');
+        socket.on(GAME_ACTIONS.RECEIVE_ACTION, (data) => {
+            console.log('Action received!');
+            setEnergy((prevEnergy) => prevEnergy + 50);
+            setIsMyTurn(true);
         });
+
+        // socket.on(GAME_ACTIONS.END_TURN, () => {
+        //     console.log('⏳ Waiting for opponent\'s turn...');
+        // });
 
         socket.on(GAME_ACTIONS.CARD_SELECTION, (data) => {
             console.log('🃏 Select your cards!', data);
@@ -112,10 +120,12 @@ export const GameBoard = (props:IProps) => {
 
         socket.on(GAME_ACTIONS.GAME_OVER, (data) => {
             console.log('❌ Game over!', data);
+            updateBalanceUser(user.id, data.award);
             setLog([]); // Réinitialiser le journal des actions
             setPendingAction(null); // Réinitialiser l'action en attente
             setEnergy(100); // Réinitialiser l'énergie
             setGameState(0); // Le jeu est terminé, on remet l'état du jeu à 0
+            
         });
 
         return () => {
@@ -239,7 +249,7 @@ export const GameBoard = (props:IProps) => {
         
     // };
     const attack = () => {
-        const energyCost = 20; // Exemple de coût d'énergie fixe pour une attaque
+        const energyCost = 50; // Exemple de coût d'énergie fixe pour une attaque
     
         // Vérifiez si c'est le tour de l'utilisateur
         if (!isMyTurn) {
@@ -334,7 +344,7 @@ export const GameBoard = (props:IProps) => {
                 <button 
                 onClick={attack} 
                 disabled={!selectedPlayerCard || !selectedEnemyCard}>
-                    Attack
+                    Attack (costs 50 energy)
                 </button>
                 <div className="log-container">
                     <h3>Action Log</h3>
