@@ -78,7 +78,23 @@ export const fetchAllUsers = async (): Promise<IUser[]> => {
     }
 };
 
-export const updateBalanceUser = async (userId: number, award: number) => {
+export const updateUser = async (user: IUser) => {
+    const url: string = base_url+"/user/"+user.id;
+    console.log(url)
+    const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: 'include',
+        body: JSON.stringify(user),
+    });
+
+    if (!response.ok) {
+        throw new Error(`Erreur lors de la mise à jour de l'user : ${response.statusText}`);
+    }
+
+    return await response.json();
 };
 
 export const register = async (user: formUser): Promise<IUser> => {

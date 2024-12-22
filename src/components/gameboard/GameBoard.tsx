@@ -1,3 +1,5 @@
+// noinspection LanguageDetectionInspection
+
 import { useEffect, useState } from "react";
 import IUser from "../../types/IUser.ts";
 import {Board} from "./containers/Board.tsx";
@@ -8,7 +10,9 @@ import { SelectCards } from "./components/SelectCards.tsx";
 import { Socket } from "socket.io-client";
 import { fetchCard } from "../../api/cardService.ts";
 import ICard from "../../types/ICard.ts";
-import { fetchUserById, updateBalanceUser } from "../../api/userService.ts";
+import { fetchUserById, updateUser } from "../../api/userService.ts";
+import {submit_user_action} from "../../slices/userSlice.ts";
+import {useDispatch} from "react-redux";
 
 
 interface IProps{
@@ -33,6 +37,7 @@ export const GameBoard = (props:IProps) => {
     const user: IUser = props.user;
     // const gameState = useSelector((state: RootState) => state.gameState); // Sélection de l'état global du plateau
     // TODO : Réféchir au store pour le gamestatre
+    const dispatch = useDispatch();
     const [gameState, setGameState] = useState(0);
     //TODO : si game over que d'un coté reset pas forcement tous de l'autre faire gaffe 
     const [isMyTurn, setIsMyTurn] = useState(false);
@@ -162,7 +167,12 @@ export const GameBoard = (props:IProps) => {
 
         socket.on(GAME_ACTIONS.GAME_OVER, (data) => {
             console.log('❌ Game over!', data);
-            updateBalanceUser(user.id, data.award);
+            const money: number = data.award
+            if (money > 0) {
+                user.account += money
+                updateUser(user); // Mettre a jour l'user par requete au monolite
+                dispatch(submit_user_action({ user })); // Mettre à jour l'user courant dans le store
+            }
             setLog([]); // Réinitialiser le journal des actions
             setPendingAction(null); // Réinitialiser l'action en attente
             setEnergy(50); // Réinitialiser l'énergie
