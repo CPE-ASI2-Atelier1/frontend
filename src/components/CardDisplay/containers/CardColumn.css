@@ -24,6 +24,11 @@
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
 
+.card-column-item.selected {
+    background-color: #6b86e0; /* Fond vert clair pour la sélection */
+    border-color: #160f51; /* Bordure verte foncée */
+}
+
 .card-column-item img {
     max-width: 100%;
     max-height: 100%;

@@ -28,8 +28,6 @@ export const Board = (props:IProps) => {
         }
     };
 
-    const userCards = props.cards.map((card) => card.id);
-    console.log(userCards);
 
     return (
         <div className="board-container">
@@ -46,7 +44,7 @@ export const Board = (props:IProps) => {
             <div className="cards-wrapper">
                 {/* board-container */}
                 <CardColumn
-                    cardIds={userCards}
+                    cards={props.cards}
                     onCardClick={toggleCardSelection} // Passe la logique de sélection
                     selectedCardIds={selectedCard ? [selectedCard] : []} // Met à jour les styles
                 />

@@ -60,7 +60,10 @@ export const GameBoard = (props:IProps) => {
         // Écoute des événements uniquement de type GAME_ACTIONS
         socket.on(GAME_ACTIONS.GAME_STARTS, (enemyC) => {
             console.log('🎮 Game has started!', enemyC);
-            // TODO enlever les 2, enemyId sera le seul envoyé
+            // On refait les reinitialisation au cas où le board s'est mal reset
+            setLog([]); // Réinitialiser le journal des actions
+            setPendingAction(null); // Réinitialiser l'action en attente
+            setEnergy(50); // Réinitialiser l'énergie
             handleGameStart(enemyC.cardsIds, setEnemyCards, setGameState);
         });
 
@@ -123,7 +126,7 @@ export const GameBoard = (props:IProps) => {
             updateBalanceUser(user.id, data.award);
             setLog([]); // Réinitialiser le journal des actions
             setPendingAction(null); // Réinitialiser l'action en attente
-            setEnergy(100); // Réinitialiser l'énergie
+            setEnergy(50); // Réinitialiser l'énergie
             setGameState(0); // Le jeu est terminé, on remet l'état du jeu à 0
             
         });

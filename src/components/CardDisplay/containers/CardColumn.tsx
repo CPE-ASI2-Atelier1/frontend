@@ -1,8 +1,10 @@
+import ICard from "../../../types/ICard";
 import { Card } from "../../Card/Card";
-import styles from "./CardColumn.css";
+import { CardFull } from "../../Card/containers/CardFull";
+import "./CardColumn.css";
 
 interface IProps {
-    cardIds: number[];
+    cards: ICard[];
     onCardClick: (cardId: number) => void; // Callback pour gérer le clic sur une carte
     selectedCardIds: number[]; // Liste des cartes sélectionnées
 }
@@ -10,15 +12,15 @@ interface IProps {
 export const CardColumn = (props: IProps) => {
     return (
         <div className="card-column">
-            {props.cardIds.map((cardId) => (
+            {props.cards.map((card) => (
                 <div
-                    key={cardId}
+                    key={card.id}
                     className={`card-column-item ${
-                        props.selectedCardIds.includes(cardId) ? "selected" : ""
+                        props.selectedCardIds.includes(card.id) ? "selected" : ""
                     }`}
-                    onClick={() => props.onCardClick(cardId)} // Gère le clic
+                    onClick={() => props.onCardClick(card.id)} // Gère le clic
                 >
-                    <Card display="full" cardId={cardId} isWIP={false} />
+                    <CardFull card={card} />
                 </div>
             ))}
         </div>
