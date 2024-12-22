@@ -60,7 +60,8 @@ export const Chat = (props: IProps) => {
                 }));
             console.log('data received  : ',sent)
 
-            setSentMessages(data.messages); // Met à jour les messages envoyés
+            
+            setSentMessages(sent); // Met à jour les messages envoyés
             
             setReceivedMessages(receivedIM); // Met à jour les messages reçus
         });
