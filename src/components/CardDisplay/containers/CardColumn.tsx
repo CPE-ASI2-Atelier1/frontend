@@ -7,9 +7,9 @@ interface CardColumnProps {
 
 export const CardColumn = ({ cardIds }: CardColumnProps) => {
     return (
-        <div className={styles["card-column"]}>
+        <div className={"card-column"}>
             {cardIds.map((cardId) => (
-                <div key={cardId} className={styles["card-column-item"]}>
+                <div key={cardId} className={"card-column-item"}>
                     <Card display="full" cardId={cardId} isWIP={false} />
                 </div>
             ))}
