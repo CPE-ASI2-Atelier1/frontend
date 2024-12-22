@@ -77,13 +77,15 @@ export const GameBoard = (props:IProps) => {
             // On refait les reinitialisation au cas où le board s'est mal reset
             setLog([]); // Réinitialiser le journal des actions
             setPendingAction(null); // Réinitialiser l'action en attente
-            setEnergy(50); // Réinitialiser l'énergie
+            setEnergy(150); // Réinitialiser l'énergie
+            setEnemyEnergy(150); // Réinitialiser l'énergie de l'ennemi
             handleGameStart(enemyC.cardsIds, setEnemyCards, setGameState);
         });
 
-        socket.on(GAME_ACTIONS.START_TURN, () => {
+        socket.on(GAME_ACTIONS.START_TURN, (data) => {
             console.log('🔄 Your turn to play!');
-            setEnergy((prevEnergy) => prevEnergy + 100);
+            console.log("data", data);
+            setEnergy(data.energy);
             setIsMyTurn(true);
         });
 
@@ -125,7 +127,7 @@ export const GameBoard = (props:IProps) => {
         });
 
         socket.on(GAME_ACTIONS.RECEIVE_ACTION, (data) => {
-            const {cardId, targetId, damage } = data;
+            const {cardId, targetId, damage, energy } = data;
             console.log(`Action received: ${damage} damage on card ${targetId}`);
 
             // Met à jour les HP de la carte cible
@@ -138,16 +140,7 @@ export const GameBoard = (props:IProps) => {
             );
 
             // Récupérer la carte attaquante dans enemyCards et soustraire son énergie
-            setEnemyEnergy((prevEnergy) => {
-                const attackingCard = enemyCards.find((card) => card.id === cardId);
-                if (!attackingCard) {
-                    console.warn(`Card with ID ${cardId} not found in enemy cards.`);
-                    return prevEnergy; // Ne change rien si la carte n'est pas trouvée
-                }
-
-                return Math.max(0, prevEnergy - (attackingCard.energy ?? 0)); // Réduire l'énergie sans descendre sous 0
-            });
-
+            setEnemyEnergy(energy);
             setLog((prevLog) => [...prevLog, `Action received: ${data.damage} damage received on card ${targetId} by card ${cardId}!`]);
         });
 
@@ -167,22 +160,31 @@ export const GameBoard = (props:IProps) => {
 
         socket.on(GAME_ACTIONS.GAME_OVER, (data) => {
             console.log('❌ Game over!', data);
-            const money: number = data.award
-            if (money > 0) {
-                user.account += money
-                updateUser(user); // Mettre a jour l'user par requete au monolite
-                dispatch(submit_user_action({ user })); // Mettre à jour l'user courant dans le store
-            }
+        
             setLog([]); // Réinitialiser le journal des actions
             setPendingAction(null); // Réinitialiser l'action en attente
-            setEnergy(50); // Réinitialiser l'énergie
+            setEnergy(150); // Réinitialiser l'énergie
+            setEnemyEnergy(150); // Réinitialiser l'énergie de l'ennemi
             setEnemyCards([]); // Réinitialiser les cartes de l'ennemi
             setSelectedCards([]); // Réinitialiser les cartes sélectionnées
             setSelectedEnemyCard(null); // Réinitialiser la carte ennemie sélectionnée
             setSelectedPlayerCard(null); // Réinitialiser la carte du joueur sélectionnée
             setEnemy(undefined); // Réinitialiser l'ennemy
-            setGameState(0); // Le jeu est terminé, on remet l'état du jeu à 0
-            
+            const money: number = data.award
+            console.log('money : ',money)
+            if (money > 0) {
+                const newUser = { ...user, account: user.account + money };
+                console.log('newUser : ',newUser)
+                updateUser(newUser); // Mettre a jour l'user par requete au monolite
+                dispatch(submit_user_action({ user: newUser })); // Mettre à jour l'user courant dans le store
+                setGameState(5); // Le jeu est terminé
+            }
+            else if (data.result === 'lose') {
+                console.log('test state')
+                setGameState(6); // Le jeu est terminé
+            }else{
+                setGameState(0); // Le jeu est terminé, on remet l'état du jeu à 0
+            }
         });
 
         return () => {
@@ -353,7 +355,7 @@ export const GameBoard = (props:IProps) => {
             return;
         }
 
-        setEnemyEnergy(enemyEnergy + 100);
+        setEnemyEnergy(enemyEnergy + 150);
         setMessage(null);
 
         socket.emit("END_TURN", { id: Number(user.id) });
@@ -443,6 +445,26 @@ export const GameBoard = (props:IProps) => {
             </div>
         </div>
     )}
+    if (gameState === 5) {
+        return (
+            <div className="gameboard-container">
+                <div className="end-game-container">
+                    <h1>Vous avez gagné ! Allez voir votre compte</h1>
+                    <button onClick={startGame} className="start-game-button">Play Again</button>
+                </div>
+            </div>
+        );
+    }
+    if (gameState === 6) {
+        return (
+            <div className="gameboard-container">
+                <div className="end-game-container">
+                    <h1>Game Over!</h1>
+                    <button onClick={startGame} className="start-game-button">Play Again</button>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="error-message">
             Problem with the gameboard state pls refresh
