@@ -64,9 +64,14 @@ export const Chat = (props: IProps) => {
         });
 
         socket.on("RECEIVE_MESSAGE", (data: IMessage) => {
-            if (receiverId === 0) {
-                setReceivedMessages((prevMessages) => [...prevMessages, data]); // Ajoute le message reçu
-            }else if(receiverId === data.senderId){
+            // if (receiverId === 0) {
+            //     setReceivedMessages((prevMessages) => [...prevMessages, data]); // Ajoute le message reçu
+            // }else if(receiverId === data.senderId){
+            //     setReceivedMessages((prevMessages) => [...prevMessages, data]); // Ajoute le message reçu
+            // }
+            console.log('data received  : ',data)
+            console.log('receiverId  : ',receiverId)
+            if(receiverId === data.senderId){
                 setReceivedMessages((prevMessages) => [...prevMessages, data]); // Ajoute le message reçu
             }
         });
@@ -81,17 +86,24 @@ export const Chat = (props: IProps) => {
             socket.off("RECEIVE_MESSAGE");
             socket.off("USER_NOT_CONNECTED");
         };
-    }, [socket, user.id]);
+    }, [socket, user.id, receiverId]);
 
     // Efface les messages affichés et demande l'historique lorsque le destinataire change
     useEffect(() => {
         if (receiverId || receiverId === 0) {
             setReceivedMessages([]);
             setSentMessages([]);
+            console.log(`Requesting chat history with user ${receiverId}`);
 
-            socket.emit("ON_USER_SELECT", { senderId: user.id, receiverId }); // Demande l'historique des messages
+            if (receiverId == 0){
+                socket.emit("ON_USER_SELECT", { senderId: user.id, receiverId:"0" }); // Demande l'historique des messages
+            }
+            else{
+                socket.emit("ON_USER_SELECT", { senderId: user.id, receiverId:receiverId }); // Demande l'historique des messages
+
+            }
         }
-    }, [receiverId, socket, user.id]);
+    }, [receiverId]);
 
     return (
         <div className="chat-container">

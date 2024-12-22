@@ -15,6 +15,7 @@ interface IProps {
 export const SelectReceiver = (props: IProps) => {
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = e.target.value === "" ? null : Number(e.target.value);
+        console.log('selectedValue : ',selectedValue)
         props.setReceiverId(selectedValue); // Met à jour le destinataire sélectionné
     };
 

@@ -24,22 +24,14 @@ interface PendingAction {
     targetId: number;
     energyCost: number;
 }
-interface DamageLog {
-    cardId: number;
-    targetId: number;
-    damage: number;
-}
 
 export const GameBoard = (props:IProps) => {
 
-    // const dispatch = useDispatch();
     const socket = props.socket;
     const user: IUser = props.user;
-    // const gameState = useSelector((state: RootState) => state.gameState); // Sélection de l'état global du plateau
-    // TODO : Réféchir au store pour le gamestatre
+
     const dispatch = useDispatch();
     const [gameState, setGameState] = useState(0);
-    //TODO : si game over que d'un coté reset pas forcement tous de l'autre faire gaffe 
     const [isMyTurn, setIsMyTurn] = useState(false);
     const [energy, setEnergy] = useState<number>(50);
     const [enemyEnergy, setEnemyEnergy] = useState<number>(150);
@@ -49,12 +41,6 @@ export const GameBoard = (props:IProps) => {
     const [message, setMessage] = useState<string | null>(null); // Notification pour action interdite
     const [animate, setAnimate] = useState(false);
 
-    /*Utilisation de useRef pour l'action en attente pour avoir l'info directement
-    Alors que useState ne met à jour qu'après le rendu donc reception de
-    l'événement ACTION_SUCCESS ou ACTION_FAILED avant de mettre à jour l'état 
-    */
-    //const pendingActionRef = useRef<PendingAction | null>(null);    
-    //Crash non résolu lors de la remise à null dans le socket.on action_success donc repasse sur useState
    const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
     // Card Selection during game to attack the card chosen
@@ -78,14 +64,15 @@ export const GameBoard = (props:IProps) => {
             setLog([]); // Réinitialiser le journal des actions
             setPendingAction(null); // Réinitialiser l'action en attente
             setIsMyTurn(false); // Réinitialiser le tour
-            setEnergy(150); // Réinitialiser l'énergie
-            setEnemyEnergy(150); // Réinitialiser l'énergie de l'ennemi
+            setEnergy(0); // Réinitialiser l'énergie
+            setEnemyEnergy(0); // Réinitialiser l'énergie de l'ennemi
             handleGameStart(enemyC.cardsIds, setEnemyCards, setGameState);
         });
 
         socket.on(GAME_ACTIONS.START_TURN, (data) => {
             console.log('🔄 Your turn to play!');
             console.log("data", data);
+            setEnemyEnergy(data.enemyEnergy);
             setEnergy(data.energy);
             setIsMyTurn(true);
         });
@@ -105,7 +92,6 @@ export const GameBoard = (props:IProps) => {
                 setEnergy(pendingAction.energyCost);
                 setPendingAction(null); // Réinitialisez l'action en attente
             }
-            //TODO : faire verification pour les cartes si elles ont les bonnes props 
             setEnemyCards((prevCards) =>
                 prevCards.map((card) =>
                     card.id === targetId
@@ -144,10 +130,6 @@ export const GameBoard = (props:IProps) => {
             setEnemyEnergy(energy);
             setLog((prevLog) => [...prevLog, `Action received: ${data.damage} damage received on card ${targetId} by card ${cardId}!`]);
         });
-
-        // socket.on(GAME_ACTIONS.END_TURN, () => {
-        //     console.log('⏳ Waiting for opponent\'s turn...');
-        // });
 
         socket.on(GAME_ACTIONS.CARD_SELECTION, (data) => {
             console.log('🃏 Select your cards!', data);
@@ -284,26 +266,6 @@ export const GameBoard = (props:IProps) => {
         }
     }
 
-    // const attack = (cardId:number, targetId:number) => {
-    //     const energyCost = 20; // Exemple de coût d'énergie fixe pour une attaque
-    
-    //     // Vérifiez si c'est le tour de l'utilisateur
-    //     if (!isMyTurn) {
-    //         alert("It's not your turn!");
-    //         return;
-    //     }
-
-    //     // Marquez l'action comme en attente
-    //     pendingActionRef.current = { cardId, targetId, energyCost };
-
-    //     // Émettre l'action via le socket
-    //     socket.emit("SEND_ACTION", {
-    //         userId: user.id,
-    //         cardId,
-    //         targetId,
-    //     });
-        
-    // };
     const attack = () => {
     
         // Vérifiez si c'est le tour de l'utilisateur
@@ -369,109 +331,106 @@ export const GameBoard = (props:IProps) => {
     }
 
     //TODO : switch case
-    if (gameState === 0) {
-        return (
-            <div className="gameboard-container">
-                <button onClick={startGame} className="start-game-button">Start Game</button>
-            </div>
-        );
-    }
-    
-    if (gameState === 1) {
-        return (
-            <div className="ui segment">
-                <div className="ui active inverted dimmer">
-                    <div className="ui text loader">Waiting for player</div>
+    switch (gameState) {
+        case 0:
+            return (
+                <div className="gameboard-container">
+                    <button onClick={startGame} className="start-game-button">Start Game</button>
                 </div>
-                <p></p>
-            </div>
-        )
-    }
-
-    if (gameState === 2) {
-        return (
-                <div>
-                    <SelectCards cardIds={user.cardList} cardsAreSelected={cardsSelection}/>
-                </div>
-        )
-    }
-    if (gameState === 3){
-        return (
-            <div className="ui segment">
-                <div className="ui active inverted dimmer">
-                    <div className="ui text loader">Waiting for player to select their cards</div>
-                </div>
-                <p></p>
-            </div>
-        )
-    }
-    if (gameState === 4 && enemy) {
-        return (
-        <div className="gameboard-container">
-            <div className="row">
-                <Board user={enemy} cards={enemyCards} energy={enemyEnergy}
-                onCardSelection={setSelectedEnemyCard}
-                />
-            </div> 
-            <div className="end-turn-container">
-                <button onClick={endTurn}>End Turn</button>
-                <span className="turn-indicator">
-                    {isMyTurn ? "Your turn" : "Opponent's turn"}
-                </span>
-                <button 
-                onClick={attack} 
-                // disabled={!selectedPlayerCard || !selectedEnemyCard}>
-                >
-                    Attack (costs the card's energy)
-                </button>
-
-                {message && (
-                    <div className={`message-container ${animate ? "highlight" : ""}`}>
-                        <div className="message">{message}</div>
+            );
+        case 1:
+            return (
+                <div className="ui segment">
+                    <div className="ui active inverted dimmer">
+                        <div className="ui text loader">Waiting for player</div>
                     </div>
-                )}
-                <div className="log-container">
-                    <h3>Action Log</h3>
-                    <ul>
-                        {log.map((entry, index) => (
-                            <li key={index}>{entry}</li>
-                        ))}
-                    </ul>
+                    <p></p>
                 </div>
+            );
+        case 2:
+            return (
+                <div>
+                    <SelectCards cardIds={user.cardList} cardsAreSelected={cardsSelection} />
+                </div>
+            );
+        case 3:
+            return (
+                <div className="ui segment">
+                    <div className="ui active inverted dimmer">
+                        <div className="ui text loader">Waiting for player to select their cards</div>
+                    </div>
+                    <p></p>
+                </div>
+            );
+        case 4:
+            if (enemy) {
+                return (
+                    <div className="gameboard-container">
+                        <div className="row">
+                            <Board user={enemy} cards={enemyCards} energy={enemyEnergy}
+                                onCardSelection={setSelectedEnemyCard}
+                            />
+                        </div>
+                        <div className="end-turn-container">
+                            <button onClick={endTurn}>End Turn</button>
+                            <span className="turn-indicator">
+                                {isMyTurn ? "Your turn" : "Opponent's turn"}
+                            </span>
+                            <button
+                                onClick={attack}
+                            >
+                                Attack (costs the card's energy)
+                            </button>
 
-            </div>
-            <div className="row">
-                <Board user={user} cards={selectedCards} energy={energy} 
-                onCardSelection={setSelectedPlayerCard}
-                />
-            </div>
-        </div>
-    )}
-    if (gameState === 5) {
-        return (
-            <div className="gameboard-container">
-                <div className="end-game-container">
-                    <h1>Vous avez gagné ! Allez voir votre compte</h1>
-                    <button onClick={startGame} className="start-game-button">Play Again</button>
+                            {message && (
+                                <div className={`message-container ${animate ? "highlight" : ""}`}>
+                                    <div className="message">{message}</div>
+                                </div>
+                            )}
+                            <div className="log-container">
+                                <h3>Action Log</h3>
+                                <ul>
+                                    {log.map((entry, index) => (
+                                        <li key={index}>{entry}</li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                        </div>
+                        <div className="row">
+                            <Board user={user} cards={selectedCards} energy={energy}
+                                onCardSelection={setSelectedPlayerCard}
+                            />
+                        </div>
+                    </div>
+                );
+            }
+            break;
+        case 5:
+            return (
+                <div className="gameboard-container">
+                    <div className="end-game-container">
+                        <h1>Vous avez gagné ! Allez voir votre compte</h1>
+                        <button onClick={startGame} className="start-game-button">Play Again</button>
+                    </div>
                 </div>
-            </div>
-        );
-    }
-    if (gameState === 6) {
-        return (
-            <div className="gameboard-container">
-                <div className="end-game-container">
-                    <h1>Game Over!</h1>
-                    <button onClick={startGame} className="start-game-button">Play Again</button>
+            );
+        case 6:
+            return (
+                <div className="gameboard-container">
+                    <div className="end-game-container">
+                        <h1>Game Over!</h1>
+                        <button onClick={startGame} className="start-game-button">Play Again</button>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        default:
+            return (
+                <div className="error-message">
+                    Problem with the gameboard state pls refresh
+                </div>
+            );
     }
-    return (
-        <div className="error-message">
-            Problem with the gameboard state pls refresh
-        </div>
-    );
 
 
 }
