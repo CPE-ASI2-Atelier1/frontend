@@ -10,6 +10,11 @@ interface IProps {
 }
 
 export const CardColumn = (props: IProps) => {
+    const handleCardClick = (card: ICard) => {
+        if (card.hp! > 0) {
+            props.onCardClick(card.id); // Seules les cartes avec HP > 0 peuvent être sélectionnées
+        }
+    };
     return (
         <div className="card-column">
             {props.cards.map((card) => (
@@ -17,8 +22,8 @@ export const CardColumn = (props: IProps) => {
                     key={card.id}
                     className={`card-column-item ${
                         props.selectedCardIds.includes(card.id) ? "selected" : ""
-                    }`}
-                    onClick={() => props.onCardClick(card.id)} // Gère le clic
+                    } ${card.hp === 0 ? "disabled" : ""}`}
+                    onClick={() => handleCardClick(card)} // Gère le clic
                 >
                     <CardFull card={card} />
                 </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import IUser from "../../types/IUser.ts";
 import {Board} from "./containers/Board.tsx";
 import './GameBoard.css';
+import "./MessageContainer.css"; 
 import { GAME_ACTIONS } from '../../constants/gameActions.ts';
 import { SelectCards } from "./components/SelectCards.tsx";
 import { Socket } from "socket.io-client";
@@ -36,23 +37,31 @@ export const GameBoard = (props:IProps) => {
     //TODO : si game over que d'un coté reset pas forcement tous de l'autre faire gaffe 
     const [isMyTurn, setIsMyTurn] = useState(false);
     const [energy, setEnergy] = useState<number>(50);
+    const [enemyEnergy, setEnemyEnergy] = useState<number>(150);
+
     // Game logs and pending actions
     const [log, setLog] = useState<string[]>([]); // Journal des actions
-    // Utilisation de useRef pour l'action en attente pour avoir l'info directement
-    // Alors que useState ne met à jour qu'après le rendu donc reception de
-    // l'événement ACTION_SUCCESS ou ACTION_FAILED avant de mettre à jour l'état 
-    // const pendingActionRef = useRef<PendingAction | null>(null);    
-    // Crash non résolu lors de la remise à null dans le socket.on action_success donc repasse sur useState
-    const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+    const [message, setMessage] = useState<string | null>(null); // Notification pour action interdite
+    const [animate, setAnimate] = useState(false);
 
+    /*Utilisation de useRef pour l'action en attente pour avoir l'info directement
+    Alors que useState ne met à jour qu'après le rendu donc reception de
+    l'événement ACTION_SUCCESS ou ACTION_FAILED avant de mettre à jour l'état 
+    */
+    //const pendingActionRef = useRef<PendingAction | null>(null);    
+    //Crash non résolu lors de la remise à null dans le socket.on action_success donc repasse sur useState
+   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+
+    // Card Selection during game to attack the card chosen
     const [selectedEnemyCard, setSelectedEnemyCard] = useState<number | null>(null);
     const [selectedPlayerCard, setSelectedPlayerCard] = useState<number | null>(null); 
 
-
+    // Card Selection before game starts
     const [selectedCards, setSelectedCards] = useState<ICard[]>([]);
     const [enemyCards, setEnemyCards] = useState<ICard[]>([]);
 
     const [enemy, setEnemy] = useState<IUser>();
+    
 
     useEffect(() => {
         if (!socket) return;
@@ -69,7 +78,7 @@ export const GameBoard = (props:IProps) => {
 
         socket.on(GAME_ACTIONS.START_TURN, () => {
             console.log('🔄 Your turn to play!');
-            setEnergy((prevEnergy) => prevEnergy + 50);
+            setEnergy((prevEnergy) => prevEnergy + 100);
             setIsMyTurn(true);
         });
 
@@ -81,12 +90,22 @@ export const GameBoard = (props:IProps) => {
             console.log("targetId", targetId);
             console.log("pendingAction", pendingAction);
 
+
+
             if (pendingAction && pendingAction.cardId === data.cardId) {
                 // Verifications déjà faites pour l'energy
                 setEnergy(pendingAction.energyCost);
                 setPendingAction(null); // Réinitialisez l'action en attente
             }
-            setLog((prevLog) => [...prevLog, `Action success: ${data.damage} damage dealt!`]);
+            //TODO : faire verification pour les cartes si elles ont les bonnes props 
+            setEnemyCards((prevCards) =>
+                prevCards.map((card) =>
+                    card.id === targetId
+                        ? { ...card, hp: Math.max(0, card.hp! - damage) } // Réduire les HP, sans descendre sous 0
+                        : card
+                )
+            );
+            setLog((prevLog) => [...prevLog, `Action success: ${data.damage} damage dealt on card ${targetId}!`]);
         });
 
         // Écoute pour ACTION_FAILED
@@ -101,10 +120,30 @@ export const GameBoard = (props:IProps) => {
         });
 
         socket.on(GAME_ACTIONS.RECEIVE_ACTION, (data) => {
-            const { cardId, damage } = data;
-            cardId;
-            console.log('Action received!');
-            setIsMyTurn(true);
+            const {cardId, targetId, damage } = data;
+            console.log(`Action received: ${damage} damage on card ${targetId}`);
+
+            // Met à jour les HP de la carte cible
+            setSelectedCards((prevCards) =>
+                prevCards.map((card) =>
+                    card.id === targetId
+                        ? { ...card, hp: Math.max(0, card.hp! - damage) } // Réduire les HP, sans descendre sous 0
+                        : card
+                )
+            );
+
+            // Récupérer la carte attaquante dans enemyCards et soustraire son énergie
+            setEnemyEnergy((prevEnergy) => {
+                const attackingCard = enemyCards.find((card) => card.id === cardId);
+                if (!attackingCard) {
+                    console.warn(`Card with ID ${cardId} not found in enemy cards.`);
+                    return prevEnergy; // Ne change rien si la carte n'est pas trouvée
+                }
+
+                return Math.max(0, prevEnergy - (attackingCard.energy ?? 0)); // Réduire l'énergie sans descendre sous 0
+            });
+
+            setLog((prevLog) => [...prevLog, `Action received: ${data.damage} damage received on card ${targetId} by card ${cardId}!`]);
         });
 
         // socket.on(GAME_ACTIONS.END_TURN, () => {
@@ -127,6 +166,11 @@ export const GameBoard = (props:IProps) => {
             setLog([]); // Réinitialiser le journal des actions
             setPendingAction(null); // Réinitialiser l'action en attente
             setEnergy(50); // Réinitialiser l'énergie
+            setEnemyCards([]); // Réinitialiser les cartes de l'ennemi
+            setSelectedCards([]); // Réinitialiser les cartes sélectionnées
+            setSelectedEnemyCard(null); // Réinitialiser la carte ennemie sélectionnée
+            setSelectedPlayerCard(null); // Réinitialiser la carte du joueur sélectionnée
+            setEnemy(undefined); // Réinitialiser l'ennemy
             setGameState(0); // Le jeu est terminé, on remet l'état du jeu à 0
             
         });
@@ -140,30 +184,14 @@ export const GameBoard = (props:IProps) => {
             socket.off(GAME_ACTIONS.GAME_OVER);
             socket.off(GAME_ACTIONS.ACTION_SUCCESS);
             socket.off(GAME_ACTIONS.ACTION_FAILED);
+            socket.off(GAME_ACTIONS.RECEIVE_ACTION);
         };
-    }, [socket,pendingAction]);
+    }, [socket,pendingAction,enemyCards]);
     
-    let cards = [];
-    for (let i = 0; i < 5; i++) {
-        cards.push([1,2,3,4,5]);
-    }
-
-    const userExample:IUser= {
-        id: 12,
-        login: "exemple",
-        lastName: "nom",
-        surName: "prenom",
-        email: "email",
-        account: 17,
-        cardList: cards
-    }
-
-    // TODO : faire cette fonction pour qu'elle envoie fin du tour au serveur 
     const handleGameStart = async (enemyC: number[], setEnemyCards: (cards: any[]) => void, setGameState: (state: number) => void) => {
         try {
-            console.log(enemyC)
             const cardList = await fetchCards(enemyC);
-            console.log(cardList);
+            console.log('enemy cards : ',cardList);
             setEnemyCards(cardList);
             setGameState(4);
         } catch (error) {
@@ -183,10 +211,24 @@ export const GameBoard = (props:IProps) => {
         }
     }
 
+    // Fonction pour afficher un message avec animation
+    const showMessage = (newMessage: string) => {
+        setMessage(newMessage);
+        setAnimate(true);
+        setTimeout(() => setAnimate(false), 500); // Animation dure 500ms
+    };
+
     const startGame = () => {
         if (!socket) return;
         console.log("Lancement de la partie...");
+        // Re réinitialisation des valeurs au cas où pas fait avant
+        setEnemyCards([]); // Réinitialiser les cartes de l'ennemi
+        setSelectedCards([]); // Réinitialiser les cartes sélectionnées
+        setSelectedEnemyCard(null); // Réinitialiser la carte ennemie sélectionnée
+        setSelectedPlayerCard(null); // Réinitialiser la carte du joueur sélectionnée
+        setEnemy(undefined); // Réinitialiser l'ennemy
         socket.emit(GAME_ACTIONS.WAITING_PLAYER, { id: user.id });
+        
         setGameState(1);
     }
 
@@ -201,11 +243,10 @@ export const GameBoard = (props:IProps) => {
     }
 
     const cardsSelection = async (cards: number[]) => {
-        console.log(cards);
+        console.log('Card selected to play : ',cards);
         try {
             // Attendez la réponse de fetchCards avant de procéder
             const cardList = await fetchCards(cards);
-            console.log(cardList);
             setSelectedCards(cardList);
 
             // Créez cards2 à partir de cardList après l'appel asynchrone
@@ -217,8 +258,6 @@ export const GameBoard = (props:IProps) => {
                 name,
                 hp,
             }));
-
-            console.log(cards2);
 
             // Émettez l'événement une fois que tout est prêt
             socket.emit("WAITING_CARDS", { id: Number(user.id), cards: cards2 });
@@ -252,28 +291,38 @@ export const GameBoard = (props:IProps) => {
         
     // };
     const attack = () => {
-        const energyCost = 50; // Exemple de coût d'énergie fixe pour une attaque
     
         // Vérifiez si c'est le tour de l'utilisateur
         if (!isMyTurn) {
-            alert("It's not your turn!");
+            showMessage("It's not your turn!");
+
             return;
         }
 
         if (!selectedPlayerCard || !selectedEnemyCard) {
-            alert("Select one of your cards and a target card!");
-            return;
-        }
+            showMessage("Select one of your cards and a target card!");
 
-        const potentialNewEnergy = energy - energyCost;
-
-        if (potentialNewEnergy < 0) {
-            alert("Not enough energy to perform this action!");
             return;
         }
 
         const cardId = selectedPlayerCard!;
         const targetId = selectedEnemyCard!;
+
+        const energyCost = selectedCards.find((card) => card.id === selectedPlayerCard)?.energy;
+
+        if (energyCost == null) {
+            console.error("The selected card does not have energy or was not found.");
+            alert("The selected card does not have energy or was not found.");
+            return;
+        }
+        
+        console.log(`Energy cost of selected card: ${energyCost}`);
+        const potentialNewEnergy = energy - energyCost;
+
+        if (potentialNewEnergy < 0) {
+            showMessage("Not enough energy to perform this action!");
+            return;
+        }
 
         setPendingAction({ cardId, targetId, energyCost:potentialNewEnergy });
     
@@ -283,14 +332,19 @@ export const GameBoard = (props:IProps) => {
             targetId
         });
 
+        // Réinitialise le message en cas de succès
+        setMessage(null);
         console.log(`Attacking with Card ${cardId} targeting Card ${targetId}`);
     };
 
     const endTurn = () =>{
         if (!isMyTurn) {
-            alert("You can't end your turn now!");
+            showMessage("You can't end your turn now!");
             return;
         }
+
+        setEnemyEnergy(enemyEnergy + 100);
+        setMessage(null);
 
         socket.emit("END_TURN", { id: Number(user.id) });
         setIsMyTurn(false);
@@ -340,7 +394,7 @@ export const GameBoard = (props:IProps) => {
         return (
         <div className="gameboard-container">
             <div className="row">
-                <Board user={enemy} cards={enemyCards} energy={energy}
+                <Board user={enemy} cards={enemyCards} energy={enemyEnergy}
                 onCardSelection={setSelectedEnemyCard}
                 />
             </div> 
@@ -353,8 +407,14 @@ export const GameBoard = (props:IProps) => {
                 onClick={attack} 
                 // disabled={!selectedPlayerCard || !selectedEnemyCard}>
                 >
-                    Attack (costs 50 energy)
+                    Attack (costs the card's energy)
                 </button>
+
+                {message && (
+                    <div className={`message-container ${animate ? "highlight" : ""}`}>
+                        <div className="message">{message}</div>
+                    </div>
+                )}
                 <div className="log-container">
                     <h3>Action Log</h3>
                     <ul>

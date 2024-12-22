@@ -34,3 +34,11 @@
     max-height: 100%;
     object-fit: cover; /* Maintient les proportions de l'image */
 }
+
+.card-column-item.disabled {
+    background-color: #333; /* Fond gris foncé pour les cartes désactivées */
+    border-color: #444; /* Bordure grise foncée */
+    cursor: not-allowed;
+    pointer-events: none; /* Empêche tout clic sur la carte */
+    opacity: 0.6;
+}
