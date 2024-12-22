@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import IUser from "../../types/IUser.ts";
 import {Board} from "./containers/Board.tsx";
@@ -9,6 +9,7 @@ import { Socket } from "socket.io-client";
 import { fetchCard } from "../../api/cardService.ts";
 import ICard from "../../types/ICard.ts";
 import { fetchUserById } from "../../api/userService.ts";
+
 
 interface IProps{
     user: IUser;
@@ -30,14 +31,23 @@ export const GameBoard = (props:IProps) => {
     // const dispatch = useDispatch();
     const socket = props.socket;
     // const gameState = useSelector((state: RootState) => state.gameState); // Sélection de l'état global du plateau
+    // TODO : Réféchir au store pour le gamestatre
     const [gameState, setGameState] = useState(0);
     const [isMyTurn, setIsMyTurn] = useState(false);
     const [energy, setEnergy] = useState<number>(100);
     // Game logs and pending actions
     const [log, setLog] = useState<string[]>([]); // Journal des actions
-    const [damageLog, setDamageLog] = useState<DamageLog[]>([]); // Historique des dégâts
-    const [pendingAction, setPendingAction] = useState<PendingAction | null>(null); // Action en attente
-    // TODO : Réféchir au store pour le gamestatre
+    // Utilisation de useRef pour l'action en attente pour avoir l'info directement
+    // Alors que useState ne met à jour qu'après le rendu donc reception de
+    // l'événement ACTION_SUCCESS ou ACTION_FAILED avant de mettre à jour l'état 
+    // const pendingActionRef = useRef<PendingAction | null>(null);    
+    // Crash non résolu lors de la remise à null dans le socket.on action_success donc repasse sur useState
+    const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+
+    const [selectedEnemyCard, setSelectedEnemyCard] = useState<number | null>(null);
+    const [selectedPlayerCard, setSelectedPlayerCard] = useState<number | null>(null); 
+
+
     const [selectedCards, setSelectedCards] = useState<ICard[]>([]);
     const [enemyCards, setEnemyCards] = useState<ICard[]>([]);
     
@@ -63,26 +73,26 @@ export const GameBoard = (props:IProps) => {
         // Écoute pour ACTION_SUCCESS
         socket.on(GAME_ACTIONS.ACTION_SUCCESS, (data) => {
             const { cardId, targetId, damage } = data;
-
             // Si l'action réussit, réduire l'énergie
-            if (pendingAction && pendingAction.cardId === cardId) {
-                setEnergy((prevEnergy) => prevEnergy - pendingAction.energyCost);
-                setPendingAction(null); // Réinitialiser l'action en attente
-            }
+            console.log("cardId", cardId);
+            console.log("targetId", targetId);
+            console.log("pendingAction", pendingAction);
 
-            setLog((prevLog) => [...prevLog, `Action successful: Card ${cardId} attacked Target ${targetId} for ${damage} damage.`]);
-            setDamageLog((prevLog) => [...prevLog, { cardId, targetId, damage }]);
+            if (pendingAction && pendingAction.cardId === data.targetId) {
+                setEnergy((prevEnergy) => prevEnergy - pendingAction.energyCost);
+                setPendingAction(null); // Réinitialisez l'action en attente
+            }
+            setLog((prevLog) => [...prevLog, `Action success: ${data.damage} damage dealt!`]);
         });
 
         // Écoute pour ACTION_FAILED
         socket.on(GAME_ACTIONS.ACTION_FAILED, (data) => {
             const { message, code } = data;
-
+            console.log("Action failed");
             // Si l'action échoue, ne pas réduire l'énergie
             if (pendingAction) {
-                setPendingAction(null); // Réinitialiser l'action en attente
+                setPendingAction(null); // Réinitialisez l'action en attente
             }
-
             setLog((prevLog) => [...prevLog, `Action failed: ${message} (Error code: ${code})`]);
         });
 
@@ -102,6 +112,9 @@ export const GameBoard = (props:IProps) => {
 
         socket.on(GAME_ACTIONS.GAME_OVER, (data) => {
             console.log('❌ Game over!', data);
+            setLog([]); // Réinitialiser le journal des actions
+            setPendingAction(null); // Réinitialiser l'action en attente
+            setEnergy(100); // Réinitialiser l'énergie
             setGameState(0); // Le jeu est terminé, on remet l'état du jeu à 0
         });
 
@@ -115,7 +128,7 @@ export const GameBoard = (props:IProps) => {
             socket.off(GAME_ACTIONS.ACTION_SUCCESS);
             socket.off(GAME_ACTIONS.ACTION_FAILED);
         };
-    }, [socket]);
+    }, [socket,pendingAction]);
     
     let cards = [];
     for (let i = 0; i < 5; i++) {
@@ -205,7 +218,27 @@ export const GameBoard = (props:IProps) => {
         }
     }
 
-    const attack = (cardId:number, targetId:number) => {
+    // const attack = (cardId:number, targetId:number) => {
+    //     const energyCost = 20; // Exemple de coût d'énergie fixe pour une attaque
+    
+    //     // Vérifiez si c'est le tour de l'utilisateur
+    //     if (!isMyTurn) {
+    //         alert("It's not your turn!");
+    //         return;
+    //     }
+
+    //     // Marquez l'action comme en attente
+    //     pendingActionRef.current = { cardId, targetId, energyCost };
+
+    //     // Émettre l'action via le socket
+    //     socket.emit("SEND_ACTION", {
+    //         userId: user.id,
+    //         cardId,
+    //         targetId,
+    //     });
+        
+    // };
+    const attack = () => {
         const energyCost = 20; // Exemple de coût d'énergie fixe pour une attaque
     
         // Vérifiez si c'est le tour de l'utilisateur
@@ -213,16 +246,26 @@ export const GameBoard = (props:IProps) => {
             alert("It's not your turn!");
             return;
         }
+
+        if (!selectedPlayerCard || !selectedEnemyCard) {
+            alert("Select one of your cards and a target card!");
+            return;
+        }
+
+        const cardId = selectedPlayerCard!;
+        const targetId = selectedEnemyCard!;
+
+        setPendingAction({ cardId, targetId, energyCost });
     
-        // Émettre l'action via le socket
+        // Attendez un cycle pour émettre l'action
+
         socket.emit("SEND_ACTION", {
-            userId: user.id,
+            userId: Number(user.id),
             cardId,
             targetId,
         });
-    
-        // Marquez l'action comme en attente
-        setPendingAction({ cardId, targetId, energyCost });
+
+        console.log(`Attacking with Card ${cardId} targeting Card ${targetId}`);
     };
 
     const endTurn = () =>{
@@ -279,14 +322,18 @@ export const GameBoard = (props:IProps) => {
         return (
         <div className="gameboard-container">
             <div className="row">
-                <Board user={enemy} cards={enemyCards} energy={energy}/>
+                <Board user={enemy} cards={enemyCards} energy={energy}
+                onCardSelection={setSelectedEnemyCard}
+                />
             </div> 
             <div className="end-turn-container">
                 <button onClick={endTurn}>End Turn</button>
                 <span className="turn-indicator">
                     {isMyTurn ? "Your turn" : "Opponent's turn"}
                 </span>
-                <button onClick={() => attack(6, 1)}>
+                <button 
+                onClick={attack} 
+                disabled={!selectedPlayerCard || !selectedEnemyCard}>
                     Attack
                 </button>
                 <div className="log-container">
@@ -300,7 +347,9 @@ export const GameBoard = (props:IProps) => {
 
             </div>
             <div className="row">
-                <Board user={user} cards={selectedCards} energy={energy}/>
+                <Board user={user} cards={selectedCards} energy={energy} 
+                onCardSelection={setSelectedPlayerCard}
+                />
             </div>
         </div>
     )}

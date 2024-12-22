@@ -9,29 +9,51 @@ interface IProps{
     user: IUser;
     cards: ICard[];
     energy: number;
+    onCardSelection: (selectedCardId: number | null) => void; // Callback pour remonter la carte sélectionnée
+
 }
 
 export const Board = (props:IProps) => {
     const user = props.user;
 
-    // Fonction qui génère une valeur aléatoire de progression et la met à jour
+    const [selectedCard, setSelectedCard] = useState<number | null>(null); // Cartes sélectionnées
+
+    const toggleCardSelection = (cardId: number) => {
+        const newSelection = selectedCard === cardId ? null : cardId;
+        setSelectedCard(newSelection);
+
+        // Remonte la sélection au parent si le callback est défini
+        if (props.onCardSelection) {
+            props.onCardSelection(newSelection);
+        }
+    };
 
     const userCards = props.cards.map((card) => card.id);
     console.log(userCards);
+
     return (
         <div className="board-container">
             <div>{user.login}</div>
-            <div className="energy" style={{ "--energy": `${props.energy}%` } as React.CSSProperties}>
+            <div
+                className="energy"
+                style={{ "--energy": `${props.energy}%` } as React.CSSProperties}
+            >
                 <div className="bar">
-                    <div className="energy-value" style={{ width: `${props.energy}%` }}></div>
-                
+                    <div
+                        className="energy-value"
+                        style={{ width: `${props.energy}%` }}
+                    ></div>
                 </div>
             </div>
             <div>{props.energy}%</div>
-            <div className="board-container">
+            <div className="cards-wrapper">
                 <h2>{user.login}'s Cards</h2>
-                <CardColumn cardIds={userCards} />
+                <CardColumn
+                    cardIds={userCards}
+                    onCardClick={toggleCardSelection} // Passe la logique de sélection
+                    selectedCardIds={selectedCard ? [selectedCard] : []} // Met à jour les styles
+                />
             </div>
         </div>
-    )
+    );
 }

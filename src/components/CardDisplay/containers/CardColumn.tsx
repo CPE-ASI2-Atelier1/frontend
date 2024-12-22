@@ -2,18 +2,27 @@ import "./CardTable.css";
 import { Card } from "../../Card/Card";
 import "./CardColumn.css";
 
-interface CardColumnProps {
-    cardIds: number[]; // IDs des cartes à afficher
+interface IProps {
+    cardIds: number[];
+    onCardClick: (cardId: number) => void; // Callback pour gérer le clic sur une carte
+    selectedCardIds: number[]; // Liste des cartes sélectionnées
 }
 
-export const CardColumn = ({ cardIds }: CardColumnProps) => {
+export const CardColumn = (props: IProps) => {
     return (
         <div className="card-column">
-            {cardIds.map((cardId) => (
-                <div key={cardId} className="card-column-item">
+            {props.cardIds.map((cardId) => (
+                <div
+                    key={cardId}
+                    className={`card-column-item ${
+                        props.selectedCardIds.includes(cardId) ? "selected" : ""
+                    }`}
+                    onClick={() => props.onCardClick(cardId)} // Gère le clic
+                >
                     <Card display="full" cardId={cardId} isWIP={false} />
                 </div>
             ))}
         </div>
     );
+
 };
