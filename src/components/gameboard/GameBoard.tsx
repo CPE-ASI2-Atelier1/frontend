@@ -80,8 +80,9 @@ export const GameBoard = (props:IProps) => {
             console.log("targetId", targetId);
             console.log("pendingAction", pendingAction);
 
-            if (pendingAction && pendingAction.cardId === data.targetId) {
-                setEnergy((prevEnergy) => prevEnergy - pendingAction.energyCost);
+            if (pendingAction && pendingAction.cardId === data.cardId) {
+                // Verifications déjà faites pour l'energy
+                setEnergy(pendingAction.energyCost);
                 setPendingAction(null); // Réinitialisez l'action en attente
             }
             setLog((prevLog) => [...prevLog, `Action success: ${data.damage} damage dealt!`]);
@@ -99,8 +100,9 @@ export const GameBoard = (props:IProps) => {
         });
 
         socket.on(GAME_ACTIONS.RECEIVE_ACTION, (data) => {
+            const { cardId, damage } = data;
+            cardId;
             console.log('Action received!');
-            setEnergy((prevEnergy) => prevEnergy + 50);
             setIsMyTurn(true);
         });
 
@@ -262,17 +264,22 @@ export const GameBoard = (props:IProps) => {
             return;
         }
 
+        const potentialNewEnergy = energy - energyCost;
+
+        if (potentialNewEnergy < 0) {
+            alert("Not enough energy to perform this action!");
+            return;
+        }
+
         const cardId = selectedPlayerCard!;
         const targetId = selectedEnemyCard!;
 
-        setPendingAction({ cardId, targetId, energyCost });
+        setPendingAction({ cardId, targetId, energyCost:potentialNewEnergy });
     
-        // Attendez un cycle pour émettre l'action
-
         socket.emit("SEND_ACTION", {
-            userId: Number(user.id),
+            userId: user.id,
             cardId,
-            targetId,
+            targetId
         });
 
         console.log(`Attacking with Card ${cardId} targeting Card ${targetId}`);
@@ -343,7 +350,8 @@ export const GameBoard = (props:IProps) => {
                 </span>
                 <button 
                 onClick={attack} 
-                disabled={!selectedPlayerCard || !selectedEnemyCard}>
+                // disabled={!selectedPlayerCard || !selectedEnemyCard}>
+                >
                     Attack (costs 50 energy)
                 </button>
                 <div className="log-container">
