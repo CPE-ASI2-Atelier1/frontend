@@ -1,81 +1,116 @@
-import { useEffect,useState } from 'react';
-import { Socket } from 'socket.io-client';
+import { useEffect, useState } from "react";
+import { Socket } from "socket.io-client";
 
-import './Chat.css';
-import { Messages } from '../components/Messages';
-import { InputChat } from '../components/InputChat';
-import IMessage from '../../../types/IMessage';
-import { SelectReceiver } from '../components/SelectReceiver';
-import IUser from '../../../types/IUser';
+import "./Chat.css";
+import { Messages } from "../components/Messages";
+import { InputChat } from "../components/InputChat";
+import IMessage from "../../../types/IMessage";
+import { SelectReceiver } from "../components/SelectReceiver";
+import IUser from "../../../types/IUser";
 
-// const SOCKET_SERVER_URL = 'http://localhost:3000'; // TODO : utiliser .env
+interface Message {
+    sender: number;
+    message: string;
+}
+interface User {
+    id: number;
+    name: string;
+}
 
 interface IProps {
     user: IUser;
     socket: Socket;
 }
-export const Chat = (props:IProps) => {
+
+export const Chat = (props: IProps) => {
     const user = props.user;
-    const socket = props.socket
-    
-    // const messages = useSelector((state: { chat: { messages: string[] } }) => state.chat.messages); // Sélectionne les messages dans le store
+    const socket = props.socket;
+
     const [receivedMessages, setReceivedMessages] = useState<IMessage[]>([]); // Liste des messages reçus
     const [sentMessages, setSentMessages] = useState<string[]>([]); // Liste des messages envoyés
-    // const [socket, setSocket] = useState<Socket | null>(null);
     const [receiverId, setReceiverId] = useState<number | null>(null); // Id du destinataire
-    const [users, setUsers] = useState<IUser[]>([]); // Liste des utilisateurs
+    const [users, setUsers] = useState<User[]>([]); // Liste des utilisateurs
+    const [receiverName, setReceiverName] = useState<string | null>(null); // Nom du destinataire sélectionné
 
-    // const userId = user.id;
-
-    useEffect(() => { // garde comme ça pour avoir différentes socket pour le test 
-        // const newSocket = io(SOCKET_SERVER_URL);
-        // const newSocket = io(SOCKET_SERVER_URL, { query: { userId } });
-        // setSocket(newSocket);
+    useEffect(() => {
         if (!socket) return;
 
-        // socket.on("connect", () => {
-        //     console.log("Connected to the server with ID:", user.id);
-        //     // document.getElementById("chat").style.display = "block";
-        // });
-        socket.on('UPDATE_CONNECTED_USERS', (data)=> {
-            setUsers(data);
-
-            console.log(`Notification: users are loaded.`);
+        // Met à jour la liste des utilisateurs connectés
+        socket.on("UPDATE_CONNECTED_USERS", (data: User[]) => {
+            const filteredUsers = data.filter((userReceived) => userReceived.id !== user.id); // Exclut l'utilisateur courant
+            setUsers(filteredUsers);
+            console.log(`Notification: users are loaded, excluding current user.`);
         });
-    
-        socket.on('RECEIVE_MESSAGE', (data: IMessage) => {
-            setReceivedMessages((prevMessages) => [...prevMessages, data]); // Ajout du message reçu
+
+        socket.on("ON_USER_SELECTED", (data: { participants: User[]; messages: Message[]; receiverName: string }) => {
+            console.log(`Chat history received for conversation with ${data.receiverName}`);
+            setReceiverName(data.receiverName); // Met à jour le nom du destinataire
+        
+            // Filtrer les messages en fonction du senderId
+            const sent = data.messages.filter((message) => message.sender === user.id); // Messages envoyés par l'utilisateur courant
+            
+            const receivedIM = data.messages
+                .filter((message) => message.sender !== user.id) // Messages reçus
+                .map((message) => ({
+                    senderId: message.sender,
+                    message: message.message,
+                    timestamp: new Date().toISOString(), // Add a timestamp
+                }));
+            console.log('data received  : ',sent)
+
+            setSentMessages(sent.map((msg) => msg.message)); // Met à jour les messages envoyés
+            
+            setReceivedMessages(receivedIM); // Met à jour les messages reçus
+        });
+
+        socket.on("RECEIVE_MESSAGE", (data: IMessage) => {
+            if (receiverId === 0) {
+                setReceivedMessages((prevMessages) => [...prevMessages, data]); // Ajoute le message reçu
+            }else if(receiverId === data.senderId){
+                setReceivedMessages((prevMessages) => [...prevMessages, data]); // Ajoute le message reçu
+            }
         });
 
         socket.on("USER_NOT_CONNECTED", (data) => {
-            setReceivedMessages((prevMessages) => [...prevMessages, data]); // Ajout du message reçu
             console.log(`Notification: The user ${data.receiverId} is not online.`);
         });
 
+        return () => {
+            socket.off("UPDATE_CONNECTED_USERS");
+            socket.off("ON_USER_SELECTED");
+            socket.off("RECEIVE_MESSAGE");
+            socket.off("USER_NOT_CONNECTED");
+        };
+    }, [socket, user.id]);
 
-        // Effacer les messages reçus et envoyés lorsque le destinataire change
-        if (receiverId) {
+    // Efface les messages affichés et demande l'historique lorsque le destinataire change
+    useEffect(() => {
+        if (receiverId || receiverId === 0) {
             setReceivedMessages([]);
             setSentMessages([]);
-        }
-    
-        // Retourne une fonction de nettoyage qui déconnecte le socket
-        return () => {
-            socket.off('RECEIVE_MESSAGE');
-            socket.off('USER_NOT_CONNECTED');
-            socket.off('UPDATE_CONNECTED_USERS')
-        };
 
-    }, [socket,receiverId]);
+            socket.emit("ON_USER_SELECT", { senderId: user.id, receiverId }); // Demande l'historique des messages
+        }
+    }, [receiverId, socket, user.id]);
 
     return (
-
         <div className="chat-container">
             <h1 className="card-h1">Chat</h1>
             <SelectReceiver users={users} receiverId={receiverId} setReceiverId={setReceiverId} />
-            <Messages receivedMessages={receivedMessages} sentMessages={sentMessages} userId={user.id} />
-
-            {socket && <InputChat socket={socket} senderId={user.id} receiverId={receiverId} setSentMessages={setSentMessages}/>}
+            {receiverName && <h2>Chat with {receiverName}</h2>}
+            <Messages
+                receivedMessages={receivedMessages}
+                sentMessages={sentMessages}
+                userId={user.id}
+            />
+            {socket && (
+                <InputChat
+                    socket={socket}
+                    senderId={user.id}
+                    receiverId={receiverId}
+                    setSentMessages={setSentMessages}
+                />
+            )}
         </div>
     );
 };

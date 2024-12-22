@@ -1,66 +1,60 @@
-import React, { useState } from 'react';
-import { Socket } from 'socket.io-client'; // Import de socket.io-client
-import './InputChat.css';
+import React, { useState } from "react";
+import { Socket } from "socket.io-client"; // Import de socket.io-client
+import "./InputChat.css";
 
 interface IProps {
     socket: Socket; // On passe le socket en prop pour pouvoir l'utiliser
     senderId: number; // Id de l'utilisateur connecté
     receiverId: number | null; // Id de l'utilisateur cible
     setSentMessages: React.Dispatch<React.SetStateAction<string[]>>; // Fonction pour mettre à jour les messages envoyés
-
 }
 
-//const SOCKET_SERVER_URL = 'http://localhost:3000'; // Remplace par l'URL de ton serveur
+export const InputChat = (props: IProps) => {
+    const [Msg, setMsg] = useState<string>("");
 
-//let socket: Socket;
-
-export const InputChat =(props: IProps)=> {
-
-    const [Msg, setMsg] = useState<string>('')
-
-    const handleSendMessage2 = () => {
-        if (Msg.trim() !== '') {
+    const handleSendMessage = () => {
+        if (Msg.trim() !== "" && (props.receiverId || props.receiverId === 0)) {
             const messageData = {
-                senderId: props.senderId, 
-                receiverId: props.receiverId, // Exemple d'utilisateur cible (personnalisable)
-                message: Msg
+                senderId: props.senderId,
+                receiverId: props.receiverId, // Destinataire
+                message: Msg,
             };
 
             props.setSentMessages((prevMessages) => [...prevMessages, Msg]); // Met à jour les messages envoyés
-            
+
             // Envoie le message au serveur via le socket
-            props.socket.emit('SEND_MESSAGE', messageData);
+            props.socket.emit("SEND_MESSAGE", messageData);
 
             // Réinitialise le champ de saisie
-            setMsg('');
+            setMsg("");
         }
     };
 
-    if (!props.receiverId) {
-        return (
-            <div className="chat-input-container">
-                <input 
-                    type="text" 
-                    placeholder="Choisissez un destinataire..." 
-                    value={Msg} 
-                    readOnly
-                />
-                <button onClick={handleSendMessage2}>Envoyer</button>
-            </div>
-        )
-    }
-
     return (
         <div className="chat-input-container">
-            <input 
-                type="text" 
-                placeholder="Write a message..." 
-                value={Msg} 
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMsg(e.target.value)} 
-                onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleSendMessage2()}
+            <input
+                type="text"
+                placeholder={
+                    props.receiverId || props.receiverId === 0
+                        ? "Write a message..."
+                        : "Select a recipient first..."
+                }
+                value={Msg}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMsg(e.target.value)}
+                onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                    e.key === "Enter" && handleSendMessage()
+                }
+                readOnly={!props.receiverId && props.receiverId !== 0} // Rend le champ non modifiable si aucun destinataire n'est sélectionné
+                aria-label="Message input"
             />
-            <button onClick={handleSendMessage2}>Send</button>
+            <button
+                onClick={handleSendMessage}
+                disabled={!props.receiverId && props.receiverId !== 0}
+                aria-label="Send message"
+                className={!props.receiverId && props.receiverId !== 0 ? "disabled" : ""}
+            >
+                Send
+            </button>
         </div>
-        
-    )
-}
+    );
+};

@@ -354,6 +354,7 @@ export const GameBoard = (props:IProps) => {
         return <div>Vous devez être connecté pour accéder au jeu</div>;
     }
 
+    //TODO : switch case
     if (gameState === 0) {
         return (
             <div className="gameboard-container">
