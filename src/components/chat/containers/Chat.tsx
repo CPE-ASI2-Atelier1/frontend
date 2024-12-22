@@ -8,9 +8,10 @@ import IMessage from "../../../types/IMessage";
 import { SelectReceiver } from "../components/SelectReceiver";
 import IUser from "../../../types/IUser";
 
-interface Message {
+interface Message extends IMessage {
     sender: number;
     message: string;
+    timestamp: number;
 }
 interface User {
     id: number;
@@ -27,7 +28,8 @@ export const Chat = (props: IProps) => {
     const socket = props.socket;
 
     const [receivedMessages, setReceivedMessages] = useState<IMessage[]>([]); // Liste des messages reçus
-    const [sentMessages, setSentMessages] = useState<string[]>([]); // Liste des messages envoyés
+    const [sentMessages, setSentMessages] = useState<IMessage[]>([]); // Mettre IMessage[] au lieu de string[]
+    // const [socket, setSocket] = useState<Socket | null>(null);
     const [receiverId, setReceiverId] = useState<number | null>(null); // Id du destinataire
     const [users, setUsers] = useState<User[]>([]); // Liste des utilisateurs
     const [receiverName, setReceiverName] = useState<string | null>(null); // Nom du destinataire sélectionné
@@ -54,11 +56,11 @@ export const Chat = (props: IProps) => {
                 .map((message) => ({
                     senderId: message.sender,
                     message: message.message,
-                    timestamp: new Date().toISOString(), // Add a timestamp
+                    timestamp: Date.now(), // Add a timestamp
                 }));
             console.log('data received  : ',sent)
 
-            setSentMessages(sent.map((msg) => msg.message)); // Met à jour les messages envoyés
+            setSentMessages(data.messages); // Met à jour les messages envoyés
             
             setReceivedMessages(receivedIM); // Met à jour les messages reçus
         });
