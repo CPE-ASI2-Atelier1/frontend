@@ -77,6 +77,7 @@ export const GameBoard = (props:IProps) => {
             // On refait les reinitialisation au cas où le board s'est mal reset
             setLog([]); // Réinitialiser le journal des actions
             setPendingAction(null); // Réinitialiser l'action en attente
+            setIsMyTurn(false); // Réinitialiser le tour
             setEnergy(150); // Réinitialiser l'énergie
             setEnemyEnergy(150); // Réinitialiser l'énergie de l'ennemi
             handleGameStart(enemyC.cardsIds, setEnemyCards, setGameState);
@@ -163,6 +164,7 @@ export const GameBoard = (props:IProps) => {
         
             setLog([]); // Réinitialiser le journal des actions
             setPendingAction(null); // Réinitialiser l'action en attente
+            setIsMyTurn(false); // Réinitialiser le tour
             setEnergy(150); // Réinitialiser l'énergie
             setEnemyEnergy(150); // Réinitialiser l'énergie de l'ennemi
             setEnemyCards([]); // Réinitialiser les cartes de l'ennemi
