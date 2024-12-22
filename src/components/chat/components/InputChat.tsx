@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Socket } from 'socket.io-client'; // Import de socket.io-client
 import './InputChat.css';
+import IMessage from '../../../types/IMessage';
 
 interface IProps {
     socket: Socket; // On passe le socket en prop pour pouvoir l'utiliser
     senderId: number; // Id de l'utilisateur connecté
     receiverId: number | null; // Id de l'utilisateur cible
-    setSentMessages: React.Dispatch<React.SetStateAction<string[]>>; // Fonction pour mettre à jour les messages envoyés
+    setSentMessages: React.Dispatch<React.SetStateAction<IMessage[]>>; // Fonction pour mettre à jour les messages envoyés
 
 }
 
@@ -26,7 +27,15 @@ export const InputChat =(props: IProps)=> {
                 message: Msg
             };
 
-            props.setSentMessages((prevMessages) => [...prevMessages, Msg]); // Met à jour les messages envoyés
+            props.setSentMessages((prevMessages) => [
+                ...prevMessages,
+                {
+                    message : Msg,
+                    senderId: props.senderId,
+                    receiverId: props.receiverId,
+                    timestamp: Date.now(), // Ajoutez un timestamp valide
+                },
+            ]); // Met à jour les messages envoyés
             
             // Envoie le message au serveur via le socket
             props.socket.emit('SEND_MESSAGE', messageData);

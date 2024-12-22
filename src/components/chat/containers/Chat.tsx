@@ -20,7 +20,7 @@ export const Chat = (props:IProps) => {
     
     // const messages = useSelector((state: { chat: { messages: string[] } }) => state.chat.messages); // Sélectionne les messages dans le store
     const [receivedMessages, setReceivedMessages] = useState<IMessage[]>([]); // Liste des messages reçus
-    const [sentMessages, setSentMessages] = useState<string[]>([]); // Liste des messages envoyés
+    const [sentMessages, setSentMessages] = useState<IMessage[]>([]); // Mettre IMessage[] au lieu de string[]
     // const [socket, setSocket] = useState<Socket | null>(null);
     const [receiverId, setReceiverId] = useState<number | null>(null); // Id du destinataire
     const [users, setUsers] = useState<IUser[]>([]); // Liste des utilisateurs
