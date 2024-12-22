@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-
+import { useEffect, useState } from "react";
 import IUser from "../../types/IUser.ts";
 import {Board} from "./containers/Board.tsx";
 import './GameBoard.css';
@@ -30,6 +29,7 @@ export const GameBoard = (props:IProps) => {
 
     // const dispatch = useDispatch();
     const socket = props.socket;
+    const user: IUser = props.user;
     // const gameState = useSelector((state: RootState) => state.gameState); // Sélection de l'état global du plateau
     // TODO : Réféchir au store pour le gamestatre
     const [gameState, setGameState] = useState(0);
@@ -51,10 +51,8 @@ export const GameBoard = (props:IProps) => {
 
     const [selectedCards, setSelectedCards] = useState<ICard[]>([]);
     const [enemyCards, setEnemyCards] = useState<ICard[]>([]);
-    
-    const [enemy, setEnemy] = useState<IUser>();
 
-    const user = props.user;
+    const [enemy, setEnemy] = useState<IUser>();
 
     useEffect(() => {
         if (!socket) return;
@@ -206,7 +204,7 @@ export const GameBoard = (props:IProps) => {
             const cardList = await fetchCards(cards);
             console.log(cardList);
             setSelectedCards(cardList);
-    
+
             // Créez cards2 à partir de cardList après l'appel asynchrone
             const cards2 = cardList.map(({ id, attack, defence, energy, name, hp }) => ({
                 id,
@@ -216,12 +214,12 @@ export const GameBoard = (props:IProps) => {
                 name,
                 hp,
             }));
-    
+
             console.log(cards2);
-    
+
             // Émettez l'événement une fois que tout est prêt
             socket.emit("WAITING_CARDS", { id: Number(user.id), cards: cards2 });
-    
+
             // Mettez à jour l'état du jeu
             setGameState(3);
         } catch (error) {
@@ -290,7 +288,7 @@ export const GameBoard = (props:IProps) => {
             alert("You can't end your turn now!");
             return;
         }
-    
+
         socket.emit("END_TURN", { id: Number(user.id) });
         setIsMyTurn(false);
     }
@@ -372,10 +370,10 @@ export const GameBoard = (props:IProps) => {
         </div>
     )}
     return (
-        <div>
+        <div className="error-message">
             Problem with the gameboard state pls refresh
         </div>
     );
-    
+
 
 }

@@ -1,6 +1,5 @@
-import "./CardTable.css";
 import { Card } from "../../Card/Card";
-import "./CardColumn.css";
+import styles from "./CardColumn.css";
 
 interface IProps {
     cardIds: number[];

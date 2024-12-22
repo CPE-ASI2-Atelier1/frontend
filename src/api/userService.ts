@@ -1,7 +1,13 @@
 import IUser from "../types/IUser";
 import { formUser } from "../pages/Signup"
 
-const base_url: string= `${import.meta.env.VITE_MONOLITH_URL}`
+let base_url: string;
+const dev: string = `${import.meta.env.VITE_ENV}`
+if (dev === "DEV") {
+    base_url = `${import.meta.env.VITE_MONOLITH_URL}`
+} else {
+    base_url = "";
+}
 
 
 /**
@@ -77,6 +83,7 @@ export const updateBalanceUser = async (userId: number, award: number) => {
 
 export const register = async (user: formUser): Promise<IUser> => {
     const url: string = base_url+"/user";
+    console.log(url)
 
     const response = await fetch(url, {
         method: "POST",
@@ -84,7 +91,7 @@ export const register = async (user: formUser): Promise<IUser> => {
             "Content-Type": "application/json",
         },
         credentials: 'include',
-        body: JSON.stringify(user),
+        body: JSON.stringify({...user, account: 100}),
     });
 
     if (!response.ok) {

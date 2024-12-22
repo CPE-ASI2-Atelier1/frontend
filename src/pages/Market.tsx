@@ -24,7 +24,7 @@ enum CardDisplay {
  */
 export const Market=()=> {
     let cardId: number = useSelector((state: RootState) => state.cardReducer.cardId ?? -1);
-    let userId: number = useSelector((state: RootState) => state.user.user?.id ?? -1);
+    let userId: number = useSelector((state: RootState) => state.user.submitted_user?.id ?? -1);
     const [cards, setCards] = useState<ICard[]>([]);
     let cardList : ICard[] = [];
     const dispatch = useDispatch();

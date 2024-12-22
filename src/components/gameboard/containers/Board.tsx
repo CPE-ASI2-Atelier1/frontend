@@ -33,11 +33,8 @@ export const Board = (props:IProps) => {
 
     return (
         <div className="board-container">
-            <div>{user.login}</div>
-            <div
-                className="energy"
-                style={{ "--energy": `${props.energy}%` } as React.CSSProperties}
-            >
+            <h2>{user.login}'s Deck</h2>
+            <div className="energy" style={{ "--energy": `${props.energy}%` } as React.CSSProperties}>
                 <div className="bar">
                     <div
                         className="energy-value"
@@ -45,9 +42,9 @@ export const Board = (props:IProps) => {
                     ></div>
                 </div>
             </div>
-            <div>{props.energy}%</div>
+            <div><b>{props.energy}%</b></div>
             <div className="cards-wrapper">
-                <h2>{user.login}'s Cards</h2>
+                {/* board-container */}
                 <CardColumn
                     cardIds={userCards}
                     onCardClick={toggleCardSelection} // Passe la logique de sélection

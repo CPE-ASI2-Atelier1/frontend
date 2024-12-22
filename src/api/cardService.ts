@@ -4,8 +4,13 @@
 
 import ICard from "../types/ICard.ts"
 
-//const url: string= `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`
-const url: string = `${import.meta.env.VITE_MONOLITH_URL}`
+let url: string;
+const dev: string = `${import.meta.env.VITE_ENV}`
+if (dev === "DEV") {
+    url = `${import.meta.env.VITE_MONOLITH_URL}`
+} else {
+    url = ""
+}
 
 /**
  * Method to fetch a card from the backend
@@ -35,15 +40,6 @@ export const addCard = async (card: ICard): Promise<ICard> => {
     const response = await fetch(`${url}/card`, config)
     if (!response.ok) {
         throw new Error(`Failed to add card : ${response.statusText}`);
-    }
-    return await response.json();
-}
-
-export const fetchWIPCard = async (cardId: number) : Promise<ICard> => {
-    // A changer : env, et envoyer au proxy.....
-    const response = await fetch(`http://localhost:8081/WipCard/${cardId}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch WIP card : ${response.statusText}`);
     }
     return await response.json();
 }

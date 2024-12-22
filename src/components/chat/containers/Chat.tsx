@@ -1,5 +1,5 @@
-import React, { useContext, useEffect,useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useEffect,useState } from 'react';
+import { Socket } from 'socket.io-client';
 
 import './Chat.css';
 import { Messages } from '../components/Messages';
@@ -8,7 +8,7 @@ import IMessage from '../../../types/IMessage';
 import { SelectReceiver } from '../components/SelectReceiver';
 import IUser from '../../../types/IUser';
 
-const SOCKET_SERVER_URL = 'http://localhost:3000'; // TODO : utiliser .env
+// const SOCKET_SERVER_URL = 'http://localhost:3000'; // TODO : utiliser .env
 
 interface IProps {
     user: IUser;
@@ -25,7 +25,7 @@ export const Chat = (props:IProps) => {
     const [receiverId, setReceiverId] = useState<number | null>(null); // Id du destinataire
     const [users, setUsers] = useState<IUser[]>([]); // Liste des utilisateurs
 
-    const userId = user.id;
+    // const userId = user.id;
 
     useEffect(() => { // garde comme ça pour avoir différentes socket pour le test 
         // const newSocket = io(SOCKET_SERVER_URL);
