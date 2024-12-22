@@ -1,0 +1,59 @@
+.receiver-select {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1); /* Fond translucide effet verre */
+    backdrop-filter: blur(10px); /* Effet de flou */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Bordure subtile */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Ombre douce */
+    max-width: 500px; /* Largeur maximale */
+    margin: 20px auto; /* Centré avec un espacement */
+    text-align: center; /* Centre le texte */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #222; /* Couleur de texte plus sombre */
+}
+
+.receiver-select label {
+    font-size: 1.1rem; /* Taille de police légèrement augmentée */
+    font-weight: 600; /* Texte en semi-gras */
+    color: #000; /* Texte noir pour contraste */
+    margin-bottom: 10px; /* Espacement sous le label */
+}
+
+.receiver-select select {
+    width: 100%;
+    max-width: 400px; /* Largeur maximale pour limiter l'étirement */
+    padding: 10px;
+    font-size: 1rem; /* Taille de police équilibrée */
+    color: #333; /* Couleur de texte */
+    background: rgba(255, 255, 255, 0.8); /* Fond translucide */
+    border: 1px solid rgba(200, 200, 200, 0.5); /* Bordure discrète */
+    border-radius: 8px;
+    outline: none;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre interne subtile */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    appearance: none; /* Supprime les styles natifs */
+}
+
+.receiver-select select:hover {
+    border-color: rgba(100, 150, 255, 0.8); /* Bordure colorée au survol */
+    box-shadow: 0 0 8px rgba(100, 150, 255, 0.5); /* Effet lumineux au survol */
+}
+
+.receiver-select select:focus {
+    border-color: rgba(100, 150, 255, 0.8); /* Bordure colorée au focus */
+    box-shadow: 0 0 8px rgba(100, 150, 255, 0.5); /* Effet lumineux au focus */
+}
+
+.receiver-select option {
+    background: rgba(255, 255, 255, 1); /* Fond blanc */
+    color: #333; /* Texte noir */
+    padding: 5px;
+}
+
+option:disabled{
+    font-style: italic;
+}

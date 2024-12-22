@@ -1,0 +1,47 @@
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 80%; /* S'assure que le chat utilise 80% de l'espace parent */
+}
+
+.chat-messages {
+    flex-grow: 1; /* La liste des messages occupe tout l'espace disponible */
+    overflow-y: auto; /* Scroll si le contenu dépasse */
+    padding: 10px;
+    background-color: #ffffff; /* Fond blanc pour bien distinguer les messages */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.chat-message {
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+    word-break: break-word;
+}
+
+.chat-input-container input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.chat-input-container button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-input-container button:hover {
+    background-color: #45a049;
+}
+
+h1 {
+    margin-top:20px;
+}

@@ -1,0 +1,53 @@
+.chat-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1); /* Fond translucide effet verre */
+    backdrop-filter: blur(10px); /* Effet de flou pour harmonie */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Bordure subtile */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Ombre douce */
+    max-width: 600px; /* Largeur maximale */
+    margin: 10px auto; /* Centrage automatique */
+}
+
+.chat-input-container input[type="text"] {
+    flex: 1; /* S'adapte pour occuper l'espace */
+    padding: 10px;
+    font-size: 1rem;
+    color: #333; /* Couleur de texte */
+    background: rgba(255, 255, 255, 0.8); /* Fond légèrement translucide */
+    border: 1px solid rgba(200, 200, 200, 0.5); /* Bordure subtile */
+    border-radius: 8px;
+    outline: none;
+    margin-right: 10px; /* Espacement avec le bouton */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Effet interne doux */
+    transition: border-color 0.3s ease;
+}
+
+.chat-input-container input[type="text"]:focus {
+    border-color: rgba(100, 150, 255, 0.8); /* Bordure colorée au focus */
+    box-shadow: 0 0 8px rgba(100, 150, 255, 0.5); /* Effet lumineux */
+}
+
+.chat-input-container button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff; /* Couleur de texte blanc */
+    background: linear-gradient(135deg, #007bff, #0056b3); /* Dégradé bleu */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Ombre douce */
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.chat-input-container button:hover {
+    background: linear-gradient(135deg, #0056b3, #003a75); /* Changement de dégradé */
+    transform: translateY(-2px); /* Légère élévation */
+}
+
+.chat-input-container button:active {
+    transform: translateY(1px); /* Effet de clic */
+}

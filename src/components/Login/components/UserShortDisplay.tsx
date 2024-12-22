@@ -10,9 +10,9 @@ export const UserShortDisplay = (props:IProps) => {
     return (
         <div>
             {props.username ? (
-                <span>Bienvenue, {props.username}</span>
+                <span>My Profile : {props.username}</span>
             ) : (
-                <span>Aucun utilisateur connecté</span>
+                <span>No users logged in</span>
             )}
         </div>
     );

@@ -1,0 +1,56 @@
+.select-cards-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.card-item {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: transform 0.2s, border 0.2s;
+}
+
+.card-item:hover {
+    transform: scale(1.05);
+}
+
+.card-item.selected {
+    background-color: #d1e7dd; /* Light green background for selection */
+    border-color: #0f5132; /* Dark green border */
+}
+
+.next-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #ccc; /* Disabled gray */
+    border: none;
+    border-radius: 5px;
+    cursor: not-allowed;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.next-button.active {
+    background-color: #007bff; /* Blue when active */
+    cursor: pointer;
+}
+
+
+.next-button:hover {
+    background-color: #0056b3;
+}

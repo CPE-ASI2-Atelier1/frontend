@@ -1,0 +1,151 @@
+/* Conteneur principal de la page */
+.gameboardcontainer {
+    display: flex;
+    flex-direction: row;
+    height: 100vh; /* Occupation de toute la hauteur de l'écran */
+    overflow: hidden;
+    font-family: 'Arial', sans-serif; /* Police moderne et épurée */
+}
+
+/* Section pour le chat */
+.chatsection {
+    flex: 1; /* 1/3 de l'espace horizontal */
+    background-color: #f8f9fa; /* Couleur de fond clair et neutre */
+    padding: 20px;
+    border-right: 1px solid #dee2e6; /* Ligne de séparation élégante */
+    box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.05); /* Ombre subtile */
+    overflow-y: auto;
+}
+
+/* Section pour le jeu */
+.gamesection {
+    flex: 3; /* 2/3 de l'espace horizontal */
+    background-color: #ffffff; /* Fond blanc pour un contraste propre */
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Bouton de démarrage */
+.start-game-button {
+    padding: 12px 24px;
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.start-game-button:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+}
+
+/* Indicateur de tour */
+.turn-indicator {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #007aff;
+    text-align: center;
+}
+
+/* Conteneur des actions de fin de tour */
+.end-turn-container {
+    margin-top: 20px;
+    padding: 16px;
+    background-color: #f1f3f5;
+    border: 1px solid #ced4da;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Log des actions */
+.log-container {
+    margin-top: 20px;
+    padding: 16px;
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.log-container h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.log-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.log-container li {
+    font-size: 14px;
+    color: #212529;
+    padding: 6px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Loader (attente d'un joueur ou d'une action) */
+.ui.segment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #f8f9fa;
+}
+
+.ui.active.inverted.dimmer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.85);
+}
+
+.ui.text.loader {
+    font-size: 18px;
+    color: #007aff;
+}
+
+/* Board pour chaque joueur */
+.row {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+/* Boutons d'action */
+button {
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+}
+
+button:disabled {
+    background-color: #adb5bd;
+    cursor: not-allowed;
+}

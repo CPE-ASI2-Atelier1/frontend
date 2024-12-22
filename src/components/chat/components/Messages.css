@@ -1,0 +1,40 @@
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    max-height: 400px; /* Limite la hauteur totale si nécessaire */
+    overflow-y: auto; /* Ajoute une barre de défilement si le contenu dépasse */
+}
+
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%; /* Limite la largeur des messages */
+    word-break: break-word; /* Gère les longs mots ou URL */
+    padding: 10px 15px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.my-message {
+    background-color: #c8e6c9; /* Vert clair pour les messages envoyés */
+    color: #2e7d32;
+    align-self: flex-end; /* Positionne à droite */
+    text-align: right; /* Aligne le texte à droite */
+}
+
+.other-message {
+    background-color: #e0f7fa; /* Bleu clair pour les messages reçus */
+    color: #006064;
+    align-self: flex-start; /* Positionne à gauche */
+    text-align: left; /* Aligne le texte à gauche */
+}
+
+.timestamp {
+    font-size: 0.8rem; /* Plus petit que le texte principal */
+    color: #757575; /* Gris pour une discrétion visuelle */
+    margin-top: 5px;
+    align-self: flex-end; /* Positionne à droite pour tous les messages */
+}

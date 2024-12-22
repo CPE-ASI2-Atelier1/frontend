@@ -1,0 +1,24 @@
+/* .message-container-wrapper {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 100%;
+    text-align: center;
+} */
+
+/* .message-container {
+    display: inline-block;
+    max-width: 400px;
+} */
+
+.message-container {
+    background-color: #ac1818;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+} 

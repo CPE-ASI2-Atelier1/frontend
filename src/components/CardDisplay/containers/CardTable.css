@@ -1,0 +1,55 @@
+/* Conteneur principal */
+.card-table {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cartes par ligne */
+    gap: 16px; /* Espacement entre les cartes */
+    padding: 20px;
+    background-color: #f9f9f9; /* Fond clair */
+    border: 1px solid #ddd; /* Bordure grise */
+    border-radius: 8px; /* Coins arrondis */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Légère ombre */
+    max-height: 80vh; /* Hauteur max */
+    overflow-y: auto; /* Scroll vertical si nécessaire */
+}
+
+/* Style de base pour une carte */
+.card-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 2px solid transparent; /* Bordure par défaut */
+    border-radius: 8px; /* Coins arrondis */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer; /* Curseur pointeur pour cliquer */
+    aspect-ratio: 2 / 3; /* Assure un ratio largeur/hauteur proportionnel 2:3 */
+    max-width: 100%; /* Évite que les cartes débordent */
+    max-height: 100%; /* Empêche une hauteur excessive */
+}
+
+/* Pour s'assurer que les images ou le contenu interne ne débordent pas */
+.card-item > * {
+    max-width: 100%;
+    object-fit: contain; /* Ajuste le contenu interne sans le déformer */
+}
+
+/* Style pour une carte sélectionnée */
+.card-item.selected {
+    border: 2px solid #007bff; /* Bordure bleue */
+    background-color: #e7f3ff; /* Fond bleu clair */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3); /* Ombre accentuée */
+    transform: translateY(-5px); /* Effet de soulèvement */
+}
+
+/* Pour rendre le conteneur responsive */
+@media (max-width: 768px) {
+    .card-table {
+        grid-template-columns: repeat(2, 1fr); /* 2 cartes par ligne sur petits écrans */
+    }
+}
+
+@media (max-width: 480px) {
+    .card-table {
+        grid-template-columns: repeat(1, 1fr); /* 1 carte par ligne sur très petits écrans */
+    }
+}

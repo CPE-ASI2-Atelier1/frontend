@@ -1,0 +1,90 @@
+.board-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4; /* Couleur de fond */
+    border-radius: 12px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.board-container h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.energy {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.energy .bar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.energy .energy-value {
+    height: 100%;
+    background-color: #4caf50; /* Vert pour l'énergie */
+    border-radius: 10px;
+    transition: width 0.3s ease-in-out;
+}
+
+.energy::after {
+    content: attr(data-energy);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.9rem;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.card-column {
+    display: flex;
+    flex-wrap: wrap; /* Les cartes passent à la ligne si nécessaire */
+    justify-content: center;
+    gap: 20px; /* Espacement entre les cartes */
+    width: 100%;
+}
+
+.card-column-item {
+    flex: 0 1 calc(25% - 20px); /* 4 cartes par ligne */
+    max-width: calc(25% - 20px);
+    min-width: 150px;
+    aspect-ratio: 3 / 4; /* Assure une proportion de 3:4 */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden; /* Évite le débordement du contenu */
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.card-column-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.card-column-item:hover {
+    transform: scale(1.05);
+    background-color: #f7f7f7;
+}

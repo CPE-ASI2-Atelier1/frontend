@@ -30,7 +30,10 @@ export const CardFull=(props:IProps)=> {
                 energy={props.card.energy}
                 attack={props.card.attack}
                 defence={props.card.defence}
-                hp={props.card.hp} >
+                hp={props.card.hp} 
+                family={props.card.family}
+                affinity={props.card.affinity}  
+                >
             </CardProperties>
         </div>
     )
